@@ -1,48 +1,48 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Shivalkar Dairy</title>
-  <link rel="stylesheet" href="login.css">
-  <script src="login.js"defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivalkar Dairy</title>
+
+    <link rel="stylesheet" href="/index/login.css">
+    <script src="/index/login.js" defer></script>
 </head>
 
 <body>
 
-<div class="bg"></div>
+    <div class="bg"></div>
 
-<div class="overlay">
+    <div class="overlay">
+        <h1>SHIVALKAR NATURAL DAIRY FARM</h1>
 
-<h1>SHIVALKAR NATURAL DAIRY FARM</h1>
+        <div class="box">
+            <div class="slider" id="slider">
 
-<div class="box">
-  <div class="slider" id="slider">
+                <!-- SIGNUP -->
+                <div class="form">
+                    <h3>Create Account</h3>
+                    <input type="text" id="name" placeholder="Name">
+                    <input type="text" id="mobile" placeholder="Mobile">
+                    <input type="email" id="email" placeholder="Email">
+                    <input type="password" id="password" placeholder="Password">
+                    <button onclick="signup()">Sign Up</button>
+                    <p onclick="showLogin()">Already account? Login</p>
+                </div>
 
-    <!-- SIGNUP -->
-    <div class="form" >
-      <h3>Create Account</h3>
-      <input type="text" id="name" placeholder="Name">
-      <input type="text" id="mobile" placeholder="Mobile">
-      <input type="email" id="email" placeholder="Email">
-      <input type="password" id="password" placeholder="Password">
-      <button onclick="signup()">Sign Up</button>
-      <p onclick="showLogin()">Already account? Login</p>
+                <!-- LOGIN -->
+                <div class="form">
+                    <h3>Login</h3>
+                    <input type="text" id="loginMobile" placeholder="Mobile">
+                    <input type="password" id="loginPassword" placeholder="Password">
+                    <button onclick="login()">Login</button>
+                    <p onclick="showSignup()">Create Account</p>
+                </div>
+
+            </div>
+        </div>
     </div>
-
-    <!-- LOGIN -->
-    <div class="form">
-      <h3>Login</h3>
-      <input type="text" id="loginMobile" placeholder="Mobile">
-      <input type="password" id="loginPassword" placeholder="Password">
-      <button onclick="login()">Login</button>
-      <p onclick="showSignup()">Create Account</p>
-    </div>
-
-  </div>
-</div>
-
-</div>
-
 
 </body>
 </html>
