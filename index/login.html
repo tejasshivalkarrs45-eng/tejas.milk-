@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Shivalkar Dairy</title>
+  <link rel="stylesheet" href="login.css">
+  <script src="login.js"defer></script>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="overlay">
+
+<h1>SHIVALKAR NATURAL DAIRY FARM</h1>
+
+<div class="box">
+  <div class="slider" id="slider">
+
+    <!-- SIGNUP -->
+    <div class="form" >
+      <h3>Create Account</h3>
+      <input type="text" id="name" placeholder="Name">
+      <input type="text" id="mobile" placeholder="Mobile">
+      <input type="email" id="email" placeholder="Email">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="signup()">Sign Up</button>
+      <p onclick="showLogin()">Already account? Login</p>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="form">
+      <h3>Login</h3>
+      <input type="text" id="loginMobile" placeholder="Mobile">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <p onclick="showSignup()">Create Account</p>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

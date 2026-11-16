@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dairy Dashboard</title>
+<link rel="stylesheet" href="dash.css">
+<script src="dash.js" defer></script>
+</head>
+
+<body>
+    
+
+<!-- ================= NAVBAR ================= -->
+<header class="topbar">
+    <div class="logo">
+        <img src="cow.png" width="40">
+        <div>
+            <h2>SHIVALKAR</h2>
+            <span>Natural Dairy Farm</span>
+        </div>
+    </div>
+
+    <div class="top-right">
+        <input type="text" placeholder="Search here...">
+        <span class="icon">🌙</span>
+        <span class="icon">🔔</span>
+    </div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+       <a href="/home/home.html">🏠 Home</a>
+<a href="/record/record.html">📊 Record</a>
+<a href="/supplier/sup.html">🚚 Supplier</a>
+    </aside>
+
+    <!-- ================= CONTENT ================= -->
+    <div class="content">
+
+        <!-- DASHBOARD -->
+        <section class="dashboard">
+            <div class="dashboard-grid">
+
+                <a href="today.html" class="dash-card">
+                    <h3>आज का दूध</h3>
+                    <p>0 L</p>
+                </a>
+
+                <a href="last-month.html" class="dash-card">
+                    <h3>पिछले महीने</h3>
+                    <p>₹0</p>
+                </a>
+
+                <a href="profit.html" class="dash-card">
+                    <h3>Profit / Loss</h3>
+                    <p>₹0</p>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- ================= ENTRY TYPE ================= -->
+        <section class="entry">
+
+            <h2>Select Entry Type</h2>
+
+            <select id="entryType">
+                <option value="">Select Entry</option>
+                <option value="udhari">उधारी</option>
+                <option value="supplier">Supplier</option>
+            </select>
+
+        </section>
+
+        <!-- ================= UDHARI FORM ================= -->
+        <section class="entry" id="udhariForm" style="display:none;">
+            <h2>उधारी एंट्री</h2>
+
+            <form>
+                <input type="text" placeholder="नाम" required>
+                <input type="date" required>
+                <input type="number" placeholder="मोबाइल नंबर" required>
+                <input type="number" placeholder="सुबह का दूध">
+                <input type="number" placeholder="शाम का दूध">
+                <input type="number" placeholder="₹ प्रति लीटर रेट" required>
+                <button type="submit">Save</button>
+            </form>
+        </section>
+
+        <!-- ================= SUPPLIER FORM ================= -->
+        <section class="entry" id="supplierForm" style="display:none;">
+            <h2>Supplier Entry</h2>
+
+            <form>
+                <input type="text" placeholder="नाम" required>
+                <input type="date" required>
+                <input type="number" placeholder="सुबह का दूध" required>
+                <input type="number" placeholder="शाम का दूध" required>
+                <input type="number" placeholder="₹ Amount" required>
+                <input type="number" placeholder="Mobile Number" required>
+
+                <button type="submit">Save</button>
+            </form>
+        </section>
+
+    </div>
+</div>
+
+<!-- ================= JS ================= -->
+
+</body>
+</html>
