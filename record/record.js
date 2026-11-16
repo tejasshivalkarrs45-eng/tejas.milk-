@@ -1,26 +1,45 @@
-fetch("http://localhost:5000/api/record")
-.then(res => res.json())
-.then(data => {
 
-const table = document.getElementById("tableData");
+async function loadRecords() {
+    try {
+        const response = await fetch(
+            "https://shivalkar-dairy-backend.onrender.com/api/record"
+        );
 
-    table.innerHTML = "";
+        if (!response.ok) {
+            throw new Error("Data load nahi hua");
+        }
 
-    data.forEach((item, index) => {
-        let row = `
-        <tr>
-            <td>${index + 1}</td>
-            <td>${item.name}</td>
-            <td>${item.date}</td>
-            <td>${item.mobile}</td>
-            <td>${item.morning}</td>
-            <td>${item.evening}</td>
-            <td>${item.rate}</td>
-        </tr>
-        `;
+        const data = await response.json();
+        const table = document.getElementById("tableData");
 
-        table.innerHTML += row;
-    });
+        table.innerHTML = "";
 
-})
-.catch(err => console.log(err));
+        data.forEach((item, index) => {
+            const morning = Number(item.morning) || 0;
+            const evening = Number(item.evening) || 0;
+            const totalMilk = morning + evening;
+            const amount = totalMilk * (Number(item.rate) || 0);
+
+            table.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${item.name || ""}</td>
+                    <td>${item.mobile || ""}</td>
+                    <td>${morning}</td>
+                    <td>${evening}</td>
+                    <td>${totalMilk}</td>
+                    <td>₹${amount.toFixed(2)}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            `;
+        });
+
+    } catch (error) {
+        console.error("Record Error:", error);
+        alert("Record load nahi ho paya. Server check karein.");
+    }
+}
+
+loadRecords();

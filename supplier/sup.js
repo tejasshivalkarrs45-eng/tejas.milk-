@@ -1,5 +1,6 @@
+
 async function loadData() {
-    const res = await fetch("http://localhost:5000/api/supplier");
+    const res = await fetch("https://shivalkar-dairy-backend.onrender.com/api/supplier");
     const data = await res.json();
 
     const table = document.getElementById("tableData");
@@ -30,9 +31,10 @@ async function loadData() {
 }
 
 loadData();
+
 // ===== GET SUPPLIER DATA =====
 
-fetch("http://localhost:5000/api/supplier")
+fetch("https://shivalkar-dairy-backend.onrender.com/api/supplier")
 .then(res => res.json())
 .then(data => {
     console.log("Supplier Data:", data);

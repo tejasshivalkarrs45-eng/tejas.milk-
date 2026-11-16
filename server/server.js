@@ -6,7 +6,12 @@ const path = require("path");
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+// Frontend files
+app.use(express.static(path.join(__dirname, "..")));
+// Open Login Page
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../index/login.html"));
+});
 // ✅ FIXED FILE PATH (IMPORTANT)
 const RECORD_FILE = path.join(__dirname, "record.json");
 const SUPPLIER_FILE = path.join(__dirname, "supplier.json");
@@ -62,6 +67,8 @@ app.get("/api/supplier", (req, res) => {
 });
 
 // ===== SERVER =====
-app.listen(5000, () => {
-    console.log("Server running on http://localhost:5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
