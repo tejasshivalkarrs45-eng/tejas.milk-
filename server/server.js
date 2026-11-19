@@ -1,74 +1,100 @@
+
 const express = require("express");
 const cors = require("cors");
-const fs = require("fs");
 const path = require("path");
+const mongoose = require("mongoose");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
+
 // Frontend files
 app.use(express.static(path.join(__dirname, "..")));
+
 // Open Login Page
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../index/login.html"));
 });
-// ✅ FIXED FILE PATH (IMPORTANT)
-const RECORD_FILE = path.join(__dirname, "record.json");
-const SUPPLIER_FILE = path.join(__dirname, "supplier.json");
 
-function readData(file) {
+// MongoDB Schemas
+const recordSchema = new mongoose.Schema({}, {
+    strict: false,
+    timestamps: true
+});
+
+const supplierSchema = new mongoose.Schema({}, {
+    strict: false,
+    timestamps: true
+});
+
+// MongoDB Models
+const Record = mongoose.model("Record", recordSchema);
+const Supplier = mongoose.model("Supplier", supplierSchema);
+
+// RECORD SAVE
+app.post("/api/record", async (req, res) => {
     try {
-        if (!fs.existsSync(file)) return [];
-        
-        let data = fs.readFileSync(file, "utf-8");
-        
-        if (!data) return [];
-
-        return JSON.parse(data);
+        await Record.create(req.body);
+        res.json({ message: "Record Saved" });
     } catch (err) {
-        console.log("JSON error fix ho gaya");
-        return [];
+        console.error("Record Error:", err);
+        res.status(500).json({ message: "Record Save Failed" });
     }
-}
-// ===== WRITE =====
-function writeData(file, data) {
+});
+
+// RECORD GET
+app.get("/api/record", async (req, res) => {
     try {
-        fs.writeFileSync(file, JSON.stringify(data, null, 2));
-        console.log("Saved in:", file);
+        const data = await Record.find().sort({ createdAt: -1 });
+        res.json(data);
     } catch (err) {
-        console.log("ERROR:", err);
+        console.error("Record Error:", err);
+        res.status(500).json({ message: "Record Load Failed" });
     }
-}
-
-// ===== RECORD SAVE =====
-app.post("/api/record", (req, res) => {
-    let data = readData(RECORD_FILE);
-    data.push(req.body);
-    writeData(RECORD_FILE, data);
-    res.json({ message: "Record Saved" });
 });
 
-// ===== RECORD GET =====
-app.get("/api/record", (req, res) => {
-    res.json(readData(RECORD_FILE));
+// SUPPLIER SAVE
+app.post("/api/supplier", async (req, res) => {
+    try {
+        await Supplier.create(req.body);
+        res.json({ message: "Supplier Saved" });
+    } catch (err) {
+        console.error("Supplier Error:", err);
+        res.status(500).json({ message: "Supplier Save Failed" });
+    }
 });
 
-// ===== SUPPLIER SAVE =====
-app.post("/api/supplier", (req, res) => {
-    let data = readData(SUPPLIER_FILE);
-    data.push(req.body);
-    writeData(SUPPLIER_FILE, data);
-    res.json({ message: "Supplier Saved" });
+// SUPPLIER GET
+app.get("/api/supplier", async (req, res) => {
+    try {
+        const data = await Supplier.find().sort({ createdAt: -1 });
+        res.json(data);
+    } catch (err) {
+        console.error("Supplier Error:", err);
+        res.status(500).json({ message: "Supplier Load Failed" });
+    }
 });
 
-// ===== SUPPLIER GET =====
-app.get("/api/supplier", (req, res) => {
-    res.json(readData(SUPPLIER_FILE));
-});
-
-// ===== SERVER =====
+// SERVER + MONGODB CONNECTION
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+async function startServer() {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI, {
+            dbName: "shivalkar_dairy"
+        });
+
+        console.log("MongoDB Connected Successfully!");
+
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+
+    } catch (err) {
+        console.error("MongoDB Connection Error:", err);
+        process.exit(1);
+    }
+}
+
+startServer();
