@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Access - Shivalkar Dairy Farm</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #102b20, #26734d);
+            padding: 20px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 35px;
+            background: white;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 15px 40px #0005;
+        }
+
+        .logo {
+            font-size: 55px;
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            color: #174b32;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 9px;
+            font-size: 16px;
+            margin-bottom: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #176b43;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #104d30;
+        }
+
+        #message {
+            margin-top: 15px;
+            color: #c62828;
+            font-size: 14px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 22px;
+            color: #176b43;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-box">
+        <div class="logo">🐄</div>
+
+        <h2>Shivalkar Natural Dairy Farm</h2>
+        <p>Dashboard खोलने के लिए अपना पासवर्ड डालें।</p>
+
+        <form id="passwordForm">
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter Dashboard Password"
+                required
+            >
+
+            <button type="submit" id="submitBtn">
+                Unlock Dashboard
+            </button>
+        </form>
+
+        <div id="message"></div>
+
+        <a href="home.html" class="back">← Back to Home</a>
+    </div>
+
+    <script>
+        const form = document.getElementById("passwordForm");
+        const message = document.getElementById("message");
+        const button = document.getElementById("submitBtn");
+
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            message.textContent = "";
+            button.disabled = true;
+            button.textContent = "Checking...";
+
+            try {
+                const response = await fetch("/api/dashboard-login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        password: document.getElementById("password").value
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    window.location.href = "/dashboard/dashboard.html";
+                } else {
+                    message.textContent = result.message || "गलत पासवर्ड!";
+                }
+
+            } catch (error) {
+                message.textContent = "Server से संपर्क नहीं हो पाया।";
+            }
+
+            button.disabled = false;
+            button.textContent = "Unlock Dashboard";
+        });
+    </script>
+
+</body>
+</html>
