@@ -1,6 +1,7 @@
 
+require("dotenv").config();
+
 const express = require("express");
-const cors = require("cors");
 const path = require("path");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
@@ -8,19 +9,23 @@ const crypto = require("crypto");
 const app = express();
 
 app.set("trust proxy", 1);
-
-app.use(cors());
 app.use(express.json());
 
-// Active Dashboard Sessions
-const activeSessions = new Map();
+// Frontend files
+app.use(express.static(path.join(__dirname, "..")));
 
+// Dashboard sessions
+const activeSessions = new Map();
+const SESSION_DURATION = 12 * 60 * 60 * 1000;
+
+// Cookie से Token निकालना
 function getToken(req) {
     const cookie = req.headers.cookie || "";
-    const match = cookie.match(/dashboard_token=([^;]+)/);
+    const match = cookie.match(/(?:^|;\s*)dashboard_token=([^;]+)/);
     return match ? match[1] : null;
 }
 
+// Session जाँचना
 function isValidSession(req) {
     const token = getToken(req);
 
@@ -38,11 +43,12 @@ function isValidSession(req) {
     return true;
 }
 
+// Protected API
 function requireDashboard(req, res, next) {
     if (!isValidSession(req)) {
         return res.status(401).json({
             success: false,
-            message: "Dashboard access required"
+            message: "कृपया दोबारा Login करें।"
         });
     }
 
@@ -59,15 +65,12 @@ app.use("/dashboard", (req, res, next) => {
     next();
 });
 
-// Frontend files
-app.use(express.static(path.join(__dirname, "..")));
-
-// Open Login Page
+// Login page
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../index/login.html"));
 });
 
-// DASHBOARD PASSWORD LOGIN
+// Dashboard Login
 app.post("/api/dashboard-login", (req, res) => {
     const enteredPassword = req.body.password;
     const correctPassword = process.env.DASHBOARD_PASSWORD;
@@ -75,7 +78,7 @@ app.post("/api/dashboard-login", (req, res) => {
     if (!correctPassword) {
         return res.status(500).json({
             success: false,
-            message: "Dashboard password server पर सेट नहीं है।"
+            message: "Server पर Dashboard Password सेट नहीं है।"
         });
     }
 
@@ -88,28 +91,31 @@ app.post("/api/dashboard-login", (req, res) => {
 
     const token = crypto.randomBytes(32).toString("hex");
 
-    // Session expires after 12 hours at the latest
-    activeSessions.set(token, Date.now() + 12 * 60 * 60 * 1000);
+    activeSessions.set(
+        token,
+        Date.now() + SESSION_DURATION
+    );
 
-    const secure = req.secure ? "; Secure" : "";
+    const secureCookie =
+        process.env.NODE_ENV === "production" ? "; Secure" : "";
 
     res.setHeader(
         "Set-Cookie",
-        `dashboard_token=${token}; HttpOnly; Path=/; SameSite=Lax${secure}`
+        `dashboard_token=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=43200${secureCookie}`
     );
 
     res.json({
         success: true,
-        message: "Dashboard Access Granted"
+        message: "Login सफल!"
     });
 });
 
-// CHECK DASHBOARD SESSION
+// Dashboard Session Check
 app.get("/api/dashboard-check", requireDashboard, (req, res) => {
     res.json({ success: true });
 });
 
-// AUTOMATIC DASHBOARD EXIT
+// Dashboard Logout
 app.post("/api/dashboard-exit", (req, res) => {
     const token = getToken(req);
 
@@ -117,10 +123,12 @@ app.post("/api/dashboard-exit", (req, res) => {
         activeSessions.delete(token);
     }
 
+    const secureCookie =
+        process.env.NODE_ENV === "production" ? "; Secure" : "";
+
     res.setHeader(
         "Set-Cookie",
-        "dashboard_token=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0" +
-        (req.secure ? "; Secure" : "")
+        `dashboard_token=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0${secureCookie}`
     );
 
     res.json({ success: true });
@@ -138,54 +146,83 @@ const supplierSchema = new mongoose.Schema({}, {
 });
 
 // MongoDB Models
-const Record = mongoose.model("Record", recordSchema);
-const Supplier = mongoose.model("Supplier", supplierSchema);
+const Record = mongoose.models.Record ||
+    mongoose.model("Record", recordSchema);
 
-// RECORD SAVE
+const Supplier = mongoose.models.Supplier ||
+    mongoose.model("Supplier", supplierSchema);
+
+// Save Record
 app.post("/api/record", requireDashboard, async (req, res) => {
     try {
-        await Record.create(req.body);
-        res.json({ message: "Record Saved" });
+        const savedRecord = await Record.create(req.body);
+
+        res.json({
+            success: true,
+            message: "Record Saved",
+            data: savedRecord
+        });
     } catch (err) {
         console.error("Record Error:", err);
-        res.status(500).json({ message: "Record Save Failed" });
+
+        res.status(500).json({
+            success: false,
+            message: "Record Save Failed"
+        });
     }
 });
 
-// RECORD GET
+// Get Records
 app.get("/api/record", requireDashboard, async (req, res) => {
     try {
         const data = await Record.find().sort({ createdAt: -1 });
         res.json(data);
     } catch (err) {
         console.error("Record Error:", err);
-        res.status(500).json({ message: "Record Load Failed" });
+
+        res.status(500).json({
+            success: false,
+            message: "Record Load Failed"
+        });
     }
 });
 
-// SUPPLIER SAVE
+// Save Supplier
 app.post("/api/supplier", requireDashboard, async (req, res) => {
     try {
-        await Supplier.create(req.body);
-        res.json({ message: "Supplier Saved" });
+        const savedSupplier = await Supplier.create(req.body);
+
+        res.json({
+            success: true,
+            message: "Supplier Saved",
+            data: savedSupplier
+        });
     } catch (err) {
         console.error("Supplier Error:", err);
-        res.status(500).json({ message: "Supplier Save Failed" });
+
+        res.status(500).json({
+            success: false,
+            message: "Supplier Save Failed"
+        });
     }
 });
 
-// SUPPLIER GET
+// Get Suppliers
 app.get("/api/supplier", requireDashboard, async (req, res) => {
     try {
         const data = await Supplier.find().sort({ createdAt: -1 });
         res.json(data);
     } catch (err) {
         console.error("Supplier Error:", err);
-        res.status(500).json({ message: "Supplier Load Failed" });
+
+        res.status(500).json({
+            success: false,
+            message: "Supplier Load Failed"
+        });
     }
 });
 
-// SERVER + MONGODB CONNECTION
+// Start Server
 const PORT = process.env.PORT || 5000;
 
 async function startServer() {
@@ -199,7 +236,6 @@ async function startServer() {
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
-
     } catch (err) {
         console.error("MongoDB Connection Error:", err);
         process.exit(1);

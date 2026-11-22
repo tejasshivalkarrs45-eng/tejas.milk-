@@ -4,8 +4,63 @@ document.addEventListener("DOMContentLoaded", function () {
     const entryType = document.getElementById("entryType");
     const udhariForm = document.getElementById("udhariForm");
     const supplierForm = document.getElementById("supplierForm");
+const API_URL = "";
+const HOME_URL = "/home/home.html";
+const LOGIN_URL = "/home/dashboard-login.html";
 
-    const API_URL = "https://shivalkar-dairy-backend.onrender.com";
+    // ===== DASHBOARD SESSION CHECK =====
+    async function checkDashboardSession() {
+        try {
+            const response = await fetch(`${API_URL}/api/dashboard-check`, {
+                method: "GET",
+                credentials: "same-origin",
+                cache: "no-store"
+            });
+
+            if (!response.ok) {
+                window.location.replace(LOGIN_URL);
+            }
+        } catch (error) {
+            alert("Server से संपर्क नहीं हो पाया।");
+            window.location.replace(LOGIN_URL);
+        }
+    }
+
+    checkDashboardSession();
+
+    // ===== HOME LINK: EXIT SESSION =====
+    document.querySelectorAll('.sidebar a[href="/home/home.html"]').forEach(link => {
+        link.addEventListener("click", async function (e) {
+            e.preventDefault();
+
+            try {
+                await fetch(`${API_URL}/api/dashboard-exit`, {
+                    method: "POST",
+                    credentials: "same-origin"
+                });
+            } catch (error) {
+                console.error("Session Exit Error:", error);
+            }
+
+            window.location.replace(HOME_URL);
+        });
+    });
+
+    // ===== BROWSER BACK: GO TO HOME =====
+    history.pushState({ dashboardPage: true }, "", window.location.href);
+
+    window.addEventListener("popstate", async function () {
+        try {
+            await fetch(`${API_URL}/api/dashboard-exit`, {
+                method: "POST",
+                credentials: "same-origin"
+            });
+        } catch (error) {
+            console.error("Session Exit Error:", error);
+        }
+
+        window.location.replace(HOME_URL);
+    });
 
     // ===== FORM SHOW / HIDE =====
     if (entryType) {
@@ -47,6 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 const res = await fetch(`${API_URL}/api/supplier`, {
                     method: "POST",
+                    credentials: "same-origin",
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -88,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 const res = await fetch(`${API_URL}/api/record`, {
                     method: "POST",
+                    credentials: "same-origin",
                     headers: {
                         "Content-Type": "application/json"
                     },

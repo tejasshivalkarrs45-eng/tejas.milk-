@@ -1,8 +1,7 @@
 
 async function loadRecords() {
     try {
-        const response = await fetch(
-            "https://shivalkar-dairy-backend.onrender.com/api/record"
+        const response = await fetch( "/api/record"
         );
 
         if (!response.ok) {
