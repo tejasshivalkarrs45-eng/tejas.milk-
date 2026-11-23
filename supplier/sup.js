@@ -1,7 +1,9 @@
 
 async function loadData() {
-    const res = await fetch("https://shivalkar-dairy-backend.onrender.com/api/supplier");
-    const data = await res.json();
+const res = await fetch("https://shivalkar-dairy-backend.onrender.com/api/supplier", {
+    method: "GET",
+    credentials: "include"
+});    const data = await res.json();
 
     const table = document.getElementById("tableData");
     table.innerHTML = "";
@@ -34,7 +36,10 @@ loadData();
 
 // ===== GET SUPPLIER DATA =====
 
-fetch("https://shivalkar-dairy-backend.onrender.com/api/supplier")
+fetch("https://shivalkar-dairy-backend.onrender.com/api/supplier", {
+    method: "GET",
+    credentials: "include"
+})
 .then(res => res.json())
 .then(data => {
     console.log("Supplier Data:", data);

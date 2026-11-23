@@ -111,8 +111,7 @@ app.post("/api/dashboard-login", (req, res) => {
 
     res.setHeader(
         "Set-Cookie",
-        `dashboard_token=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=43200${secureCookie}`
-    );
+`dashboard_token=${token}; HttpOnly; Path=/; SameSite=None; Secure; Max-Age=43200`    );
 
     res.json({
         success: true,

@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Dashboard - Shivalkar Natural Dairy Farm</title>
-    <meta name="description" content="Shivalkar Natural Dairy Farm Dashboard">
+    <title>SHIVALKAR NATURAL DAIRY FARM</title>
+    <meta name="description" content="Shivalkar Natural Dairy Farm - Freshness, Quality and Trust.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="home.css">
     <script src="home.js" defer></script>
@@ -14,150 +18,297 @@
 
 <body>
 
-    <!-- Header -->
-    <header class="header">
+    <!-- NAVBAR -->
+    <header class="header" id="top">
         <div class="container nav-container">
 
-            <a href="../index/login.html" class="logo">
-                <span class="logo-icon">🐄</span>
-                <div class="logo-text">
-                    <strong>Shivalkar</strong>
-                    <span>Natural Dairy Farm</span>
-                </div>
+            <a href="#top" class="logo">
+                <span class="logo-icon">S</span>
+                <span class="logo-text">
+                    <strong>SHIVALKAR</strong>
+                    <small>NATURAL DAIRY FARM</small>
+                </span>
             </a>
 
             <nav class="navbar" id="navbar">
-                <a href="../index/login.html">Home</a>
-                <a href="about.html">About</a>
-
-                <div class="dropdown">
-                    <a href="products.html">Products ▾</a>
-                    <div class="dropdown-menu">
-                        <a href="milk.html">Fresh Milk</a>
-                        <a href="ghee.html">Desi Ghee</a>
-                        <a href="paneer.html">Paneer</a>
-                        <a href="curd.html">Dahi</a>
-                        <a href="buttermilk.html">Chhach</a>
-                        <a href="khoya.html">Mawa / Khoya</a>
-                    </div>
-                </div>
-
-                <a href="farm.html">Our Farm</a>
-                <a href="quality.html">Quality</a>
-                <a href="gallery.html">Gallery</a>
-                <a href="reviews.html">Reviews</a>
-                <a href="contact.html">Contact</a>
-
-                <a href="/home/dashboard-login.html" class="active">Dashboard</a>
-                <a href="private.html">Private</a>
+                <a href="#top" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About Us</a>
+                <a href="#farm" class="nav-link">Our Farm</a>
+                <a href="#quality" class="nav-link">Quality</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="/home/dashboard-login.html" class="nav-dashboard">Dashboard ↗</a>
             </nav>
 
             <a href="https://wa.me/919039531737"
-               class="whatsapp-btn" target="_blank">
-                WhatsApp
+               class="whatsapp-btn" target="_blank" rel="noopener">
+                <span>☏</span> WhatsApp
             </a>
 
-            <button class="menu-btn" id="menuBtn">☰</button>
-
+            <button class="menu-btn" id="menuBtn"
+                    type="button" aria-label="Open menu"
+                    aria-expanded="false">☰</button>
         </div>
     </header>
 
     <main>
 
-        <!-- Dashboard Hero -->
-        <section class="hero" style="min-height: 40vh;">
-            <div class="hero-overlay"></div>
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-shade"></div>
 
-            <div class="container hero-content">
-                <div class="hero-text">
-                    <span class="hero-small">
-                        <a href="/home/dashboard-login.html">
-                            📊 Open Dashboard →
+            <div class="container hero-container">
+                <div class="hero-content">
+
+                    <div class="hero-label">
+                        <span></span>
+                        WELCOME TO OUR DAIRY FARM
+                    </div>
+
+                    <p class="hero-overline">NATURE • CARE • QUALITY</p>
+
+                    <h1>
+                        The Goodness of
+                        <span>Nature, Every Day.</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        SHIVALKAR NATURAL DAIRY FARM में आपका स्वागत है।
+                        हमारा उद्देश्य है प्रकृति की शुद्धता और भरोसे को
+                        आपके जीवन का हिस्सा बनाना।
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="#about" class="primary-btn">
+                            DISCOVER OUR FARM <span>↗</span>
                         </a>
-                    </span>
+                        <a href="https://wa.me/919039531737"
+                           target="_blank" rel="noopener"
+                           class="secondary-btn">
+                            CONTACT US
+                        </a>
+                    </div>
 
-                    <h1>Welcome to <span>Dashboard</span></h1>
-                    <p>Farm management, orders, products and customer insights at a glance.</p>
+                    <div class="hero-trust">
+                        <span>✦</span>
+                        FRESHNESS &nbsp; • &nbsp; QUALITY &nbsp; • &nbsp; TRUST
+                    </div>
+
+                </div>
+
+                <div class="hero-side-note">
+                    <span class="side-line"></span>
+                    <span>ROOTED IN NATURE</span>
+                </div>
+            </div>
+
+            <a href="#about" class="scroll-indicator">
+                <span>SCROLL TO EXPLORE</span>
+                <span class="scroll-arrow">↓</span>
+            </a>
+        </section>
+
+        <!-- INTRO STRIP -->
+        <section class="intro-strip">
+            <div class="container intro-strip-inner">
+                <span>PURE THOUGHTS</span>
+                <i>✦</i>
+                <span>NATURAL CARE</span>
+                <i>✦</i>
+                <span>HONEST QUALITY</span>
+                <i>✦</i>
+                <span>LASTING TRUST</span>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="section about-section" id="about">
+            <div class="container about-grid">
+
+                <div class="about-visual">
+                    <div class="about-image"></div>
+                    <div class="image-caption">
+                        <span>OUR VALUES</span>
+                        <strong>Care in Every Detail.</strong>
+                    </div>
+                    <div class="image-decoration">S</div>
+                </div>
+
+                <div class="about-content">
+                    <span class="section-kicker">ABOUT SHIVALKAR</span>
+
+                    <h2>
+                        More Than A Dairy,
+                        <span>A Promise of Trust.</span>
+                    </h2>
+
+                    <p>
+                        SHIVALKAR NATURAL DAIRY FARM में हम गुणवत्ता,
+                        देखभाल और भरोसे को महत्व देते हैं। हमारा प्रयास
+                        है कि डेयरी फार्मिंग के हर काम में स्वच्छता,
+                        जिम्मेदारी और प्राकृतिक देखभाल बनी रहे।
+                    </p>
+
+                    <p>
+                        हमारे लिए डेयरी केवल एक व्यवसाय नहीं,
+                        बल्कि मेहनत, समर्पण और विश्वास की पहचान है।
+                    </p>
+
+                    <a href="#farm" class="text-link">
+                        KNOW OUR FARM <span>↗</span>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FARM -->
+        <section class="farm-section" id="farm">
+            <div class="container farm-grid">
+
+                <div class="farm-content">
+                    <span class="section-kicker">OUR FARM</span>
+                    <h2>
+                        Where Nature
+                        <span>Meets Care.</span>
+                    </h2>
+                    <p>
+                        एक बेहतर डेयरी फार्म की पहचान उसकी देखभाल,
+                        स्वच्छता और जिम्मेदार प्रबंधन से होती है।
+                        हम अपने फार्म में इन मूल्यों को प्राथमिकता देते हैं।
+                    </p>
+                    <a href="#contact" class="light-btn">
+                        GET IN TOUCH <span>↗</span>
+                    </a>
+                </div>
+
+                <div class="farm-visual">
+                    <div class="farm-image"></div>
+                    <span class="farm-image-label">SHIVALKAR NATURAL DAIRY FARM</span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- QUALITY -->
+        <section class="section quality-section" id="quality">
+            <div class="container">
+
+                <div class="section-heading">
+                    <span class="section-kicker">OUR COMMITMENT</span>
+                    <h2>Values That Define <span>Us.</span></h2>
+                    <p>हमारे काम की नींव तीन महत्वपूर्ण मूल्यों पर आधारित है।</p>
+                </div>
+
+                <div class="quality-grid">
+
+                    <article class="quality-card">
+                        <div class="quality-icon">✦</div>
+                        <span>01</span>
+                        <h3>Freshness</h3>
+                        <p>ताजगी और प्राकृतिक गुणवत्ता को महत्व देना।</p>
+                    </article>
+
+                    <article class="quality-card">
+                        <div class="quality-icon">❖</div>
+                        <span>02</span>
+                        <h3>Quality</h3>
+                        <p>स्वच्छता, जिम्मेदारी और बेहतर देखभाल पर ध्यान।</p>
+                    </article>
+
+                    <article class="quality-card">
+                        <div class="quality-icon">♡</div>
+                        <span>03</span>
+                        <h3>Trust</h3>
+                        <p>ईमानदारी और भरोसे के साथ अपने काम को आगे बढ़ाना।</p>
+                    </article>
+
                 </div>
             </div>
         </section>
 
-        <!-- Dashboard Stats -->
-        <section class="section">
-            <div class="container dashboard-container">
+        <!-- GALLERY -->
+        <section class="gallery-section" id="gallery">
+            <div class="container">
 
-                <div class="section-heading">
-                    <span class="section-tag">📈 Overview</span>
-                    <h2>Farm <span>Statistics</span></h2>
+                <div class="gallery-heading">
+                    <div>
+                        <span class="section-kicker">A GLIMPSE OF OUR FARM</span>
+                        <h2>Life At <span>Our Farm.</span></h2>
+                    </div>
+                    <p>हमारे फार्म और डेयरी जीवन की कुछ झलकियाँ।</p>
                 </div>
 
-                <div class="dashboard-grid">
-
-                    <div class="dashboard-card">
-                        <div class="icon">🥛</div>
-                        <h3>Total Milk (Ltr)</h3>
-                        <div class="count">1,280</div>
-                        <p>This Month</p>
+                <div class="gallery-grid">
+                    <div class="gallery-photo gallery-photo-one">
+                        <span>OUR FARM</span>
                     </div>
-
-                    <div class="dashboard-card">
-                        <div class="icon">🧀</div>
-                        <h3>Products Sold</h3>
-                        <div class="count">846</div>
-                        <p>This Month</p>
+                    <div class="gallery-photo gallery-photo-two">
+                        <span>NATURAL CARE</span>
                     </div>
-
-                    <div class="dashboard-card">
-                        <div class="icon">🐄</div>
-                        <h3>Total Cows</h3>
-                        <div class="count">42</div>
-                        <p>Healthy & Happy</p>
+                    <div class="gallery-photo gallery-photo-three">
+                        <span>DAIRY LIFE</span>
                     </div>
-
-                    <div class="dashboard-card">
-                        <div class="icon">⭐</div>
-                        <h3>Customer Rating</h3>
-                        <div class="count">4.9</div>
-                        <p>★ 250+ Reviews</p>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="icon">📦</div>
-                        <h3>Orders Pending</h3>
-                        <div class="count">18</div>
-                        <p>Need Dispatch</p>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="icon">💰</div>
-                        <h3>Revenue</h3>
-                        <div class="count">₹1.2L</div>
-                        <p>This Month</p>
-                    </div>
-
                 </div>
+
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section class="contact-section" id="contact">
+            <div class="container contact-inner">
+
+                <div>
+                    <span class="section-kicker">LET'S CONNECT</span>
+                    <h2>We Would Love<br>To Hear From You.</h2>
+                    <p>SHIVALKAR NATURAL DAIRY FARM से संपर्क करें।</p>
+                </div>
+
+                <div class="contact-actions">
+                    <a href="tel:9039531737" class="contact-phone">
+                        ☎ &nbsp; 9039531737
+                    </a>
+
+                    <a href="https://wa.me/919039531737"
+                       target="_blank" rel="noopener"
+                       class="contact-whatsapp">
+                        CHAT ON WHATSAPP ↗
+                    </a>
+                </div>
+
             </div>
         </section>
 
     </main>
 
-    <!-- Dashboard Login Popup -->
+    <!-- DASHBOARD LOGIN POPUP: Existing IDs preserved -->
     <div class="dashboard-popup" id="dashboardPopup">
         <div class="dashboard-popup-box">
 
             <button type="button"
                     class="popup-close"
                     id="closeDashboardPopup"
-                    aria-label="Close">
-                ×
-            </button>
+                    aria-label="Close">×</button>
 
-            <div class="popup-brand">
-                <div class="popup-logo">🐄</div>
-                <h2>SHIVALKAR</h2>
-                <h3>NATURAL DAIRY FARM</h3>
-                <p>DASHBOARD LOGIN</p>
-            </div>
+           <div class="popup-brand">
+
+    <div class="popup-logo">
+        <span class="logo-drop">❧</span>
+        <span class="logo-letter">S</span>
+    </div>
+
+    <h2>SHIVALKAR</h2>
+
+    <div class="popup-brand-line"></div>
+
+    <h3>NATURAL DAIRY FARM</h3>
+
+    <p class="popup-login-title">
+        <span>✦</span> DASHBOARD LOGIN <span>✦</span>
+    </p>
+
+</div>
 
             <form id="dashboardPopupForm">
 
@@ -183,50 +334,68 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- FOOTER -->
     <footer class="footer">
-
         <div class="container footer-grid">
 
             <div class="footer-brand">
-                <h3>🐄 Shivalkar Natural Dairy Farm</h3>
-                <p>प्रकृति का शुद्ध स्वाद<br>Pure Taste of Nature</p>
+                <a href="#top" class="logo footer-logo">
+                    <span class="logo-icon">S</span>
+                    <span class="logo-text">
+                        <strong>SHIVALKAR</strong>
+                        <small>NATURAL DAIRY FARM</small>
+                    </span>
+                </a>
+
+                <p>
+                    प्रकृति की शुद्धता, देखभाल और भरोसे का नाम।
+                    <br>Pure Taste. Honest Care. Lasting Trust.
+                </p>
             </div>
 
             <div class="footer-links">
-                <h4>Quick Links</h4>
-                <a href="../index/login.html">Home</a>
-                <a href="about.html">About Us</a>
-                <a href="products.html">Products</a>
-                <a href="gallery.html">Gallery</a>
-                <a href="contact.html">Contact</a>
+                <h4>EXPLORE</h4>
+                <a href="#top">Home</a>
+                <a href="#about">About Us</a>
+                <a href="#farm">Our Farm</a>
+                <a href="#quality">Quality</a>
+                <a href="#gallery">Gallery</a>
+            </div>
+
+            <div class="footer-links">
+                <h4>QUICK LINKS</h4>
+                <a href="#contact">Contact Us</a>
                 <a href="/home/dashboard-login.html">Dashboard</a>
             </div>
 
-            <div class="footer-links">
-                <h4>Products</h4>
-                <a href="milk.html">Fresh Milk</a>
-                <a href="ghee.html">Desi Ghee</a>
-                <a href="paneer.html">Paneer</a>
-                <a href="curd.html">Dahi</a>
-                <a href="buttermilk.html">Chhach</a>
-            </div>
+           <div class="footer-contact">
+    <h3>Contact Persons</h3>
 
-            <div class="footer-contact">
-                <h4>Contact</h4>
-                <p>📞 9039531737</p>
-                <a href="https://wa.me/919039531737" target="_blank">
-                    📲 WhatsApp
+    <h4>→ SANTOSH SHIVALKAR</h4>
+    <p>📞 <a href="tel:6266471517">6266471517</a></p>
+
+    <h4>→ TEJAS SHIVALKAR</h4>
+    <p>📞 <a href="tel:9039531737">9039531737</a></p>
+
+    <h4>→ AKSHAY SHIVALKAR</h4>
+    <p>📞 <a href="tel:8817775122">8817775122</a></p>
+</div>      
+                <a href="https://wa.me/919039531737"
+                   target="_blank" rel="noopener">
+                    WhatsApp ↗
                 </a>
             </div>
 
         </div>
 
         <div class="footer-bottom">
-            <p>© 2026 Shivalkar Natural Dairy Farm. All Rights Reserved.</p>
+            <div class="container footer-bottom-inner">
+                <p>© 2026 SHIVALKAR NATURAL DAIRY FARM. ALL RIGHTS RESERVED.</p>
+                <a href="#top">BACK TO TOP ↑</a>
+            </div>
         </div>
-
     </footer>
+    
 
 </body>
 </html>
