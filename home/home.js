@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
             message.textContent = "Login सफल! Dashboard खुल रहा है...";
 
             setTimeout(() => {
-                window.location.href = "/dashboard/dash.html";
+                window.location.href = "/dashboard/dashboard.html";
             }, 500);
 
         } catch (error) {

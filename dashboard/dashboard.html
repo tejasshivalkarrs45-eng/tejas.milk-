@@ -1,83 +1,206 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dairy Dashboard</title>
-<link rel="stylesheet" href="dash.css">
-<script src="dash.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivalkar Dairy Dashboard</title>
+    <link rel="stylesheet" href="dash.css">
+    <script src="dash.js" defer></script>
 </head>
-
 <body>
-    
 
-<!-- ================= NAVBAR ================= -->
-<header class="topbar">
-    <div class="logo">
-        <img src="cow.png" width="40">
-        <div>
-            <h2>SHIVALKAR</h2>
-            <span>Natural Dairy Farm</span>
-        </div>
-    </div>
+<div class="dashboard-layout">
 
-    <div class="top-right">
-        <input type="text" placeholder="Search here...">
-        <span class="icon">🌙</span>
-        <span class="icon">🔔</span>
-    </div>
-</header>
-
-<!-- ================= MAIN ================= -->
-<div class="main">
-
-    <!-- ================= SIDEBAR ================= -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
-       <a href="/home/home.html">🏠 Home</a>
-<a href="/record/record.html">📊 Record</a>
-<a href="/supplier/sup.html">🚚 Supplier</a>
+        <div class="brand">
+            <img src="cow.png" alt="Dairy Logo">
+            <h2>SHIVALKAR</h2>
+            <h3>NATURAL DAIRY FARM</h3>
+            <p>Pure Milk... Healthy Life...</p>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="/dashboard/dash.html" class="active">🏠 Dashboard</a>
+            <a href="#udhariForm">➕ Add Record</a>
+            <a href="/record/record.html">📋 Records</a>
+            <a href="/supplier/sup.html">🐄 Supplier</a>
+            <a href="#reports">📊 Reports</a>
+            <a href="#settings">⚙️ Settings</a>
+            <a href="/home/home.html">↪ Logout</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="milk-glass">🥛</div>
+            <p>Fresh Milk, Healthy Life</p>
+        </div>
     </aside>
 
-    <!-- ================= CONTENT ================= -->
-    <div class="content">
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
 
-        <!-- DASHBOARD -->
-        <section class="dashboard">
-            <div class="dashboard-grid">
-
-                <a href="today.html" class="dash-card">
-                    <h3>आज का दूध</h3>
-                    <p>0 L</p>
-                </a>
-
-                <a href="last-month.html" class="dash-card">
-                    <h3>पिछले महीने</h3>
-                    <p>₹0</p>
-                </a>
-
-                <a href="profit.html" class="dash-card">
-                    <h3>Profit / Loss</h3>
-                    <p>₹0</p>
-                </a>
-
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="welcome">
+                <h2>Welcome Back, Tejas Mahajan 👋</h2>
+                <p>Shivalkar Natural Dairy Farm Dashboard</p>
             </div>
+
+            <div class="topbar-right">
+                <div class="today-date">📅 <span id="currentDate">Today</span></div>
+                <div class="notification">🔔 <span>2</span></div>
+                <div class="profile">👤</div>
+            </div>
+        </header>
+
+        <!-- BANNER -->
+        <section class="hero-banner">
+            <div class="hero-text">
+                <h1>“Healthy Cows,<br>Happy Farmers”</h1>
+            </div>
+            <div class="hero-image"></div>
         </section>
 
-        <!-- ================= ENTRY TYPE ================= -->
-        <section class="entry">
+        <!-- SUMMARY CARDS -->
+        <section class="summary-grid">
 
-            <h2>Select Entry Type</h2>
+            <div class="summary-card milk-card">
+                <div class="summary-icon">🥛</div>
+                <div>
+                    <h3>Today Milk</h3>
+                    <h2 id="todayMilk">0 Ltr</h2>
+                    <p>↑ Milk Production</p>
+                </div>
+            </div>
+
+            <div class="summary-card income-card">
+                <div class="summary-icon">₹</div>
+                <div>
+                    <h3>Today Income</h3>
+                    <h2 id="todayIncome">₹ 0</h2>
+                    <p>↑ Today's Income</p>
+                </div>
+            </div>
+
+            <div class="summary-card supplier-card">
+                <div class="summary-icon">👥</div>
+                <div>
+                    <h3>Total Suppliers</h3>
+                    <h2 id="totalSuppliers">0</h2>
+                    <p>Active Suppliers</p>
+                </div>
+            </div>
+
+            <div class="summary-card records-card">
+                <div class="summary-icon">📈</div>
+                <div>
+                    <h3>Total Records</h3>
+                    <h2 id="totalRecords">0</h2>
+                    <p>Total Entries</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- CHART AND RECENT RECORDS -->
+        <section class="dashboard-middle">
+
+            <div class="panel chart-panel" id="reports">
+                <div class="panel-heading">
+                    <h2>📊 Milk Production Overview</h2>
+                    <select id="chartPeriod">
+                        <option value="7">7 Days</option>
+                        <option value="30">30 Days</option>
+                    </select>
+                </div>
+                <div class="chart-area" id="milkChart">
+                    <p>Milk production chart will appear here.</p>
+                </div>
+            </div>
+
+            <div class="panel recent-panel">
+                <div class="panel-heading">
+                    <h2>🕒 Recent Records</h2>
+                    <a href="/record/record.html">View All →</a>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentRecords">
+                            <tr>
+                                <td colspan="5">Records will appear here.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- QUICK ACTIONS AND SUPPLIER SUMMARY -->
+        <section class="dashboard-bottom">
+
+            <div class="panel quick-panel">
+                <div class="panel-heading">
+                    <h2>⚡ Quick Actions</h2>
+                </div>
+
+                <div class="quick-actions">
+                    <a href="#udhariForm" class="quick-btn">➕<span>Add Record</span></a>
+                    <a href="#supplierForm" class="quick-btn">👥<span>Add Supplier</span></a>
+                    <a href="/record/record.html" class="quick-btn">📊<span>View Records</span></a>
+                    <a href="#settings" class="quick-btn">⚙️<span>Settings</span></a>
+                </div>
+            </div>
+
+            <div class="panel supplier-summary">
+                <div class="panel-heading">
+                    <h2>🥛 Milk Supplier Summary</h2>
+                    <span>This Week</span>
+                </div>
+
+                <div class="supplier-stats">
+                    <div>
+                        <p>Total Suppliers</p>
+                        <h2 id="supplierSummaryCount">0</h2>
+                    </div>
+                    <div>
+                        <p>Total Milk</p>
+                        <h2 id="supplierTotalMilk">0 Ltr</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote-banner">
+                <h2>“Good Dairy Management<br>Leads to a Prosperous Farm”</h2>
+                <p>Healthy Animals • Quality Milk • Happy Farmers</p>
+            </div>
+
+        </section>
+
+        <!-- ENTRY TYPE -->
+        <section class="entry-section">
+            <h2>Manage Dairy Entries</h2>
 
             <select id="entryType">
-                <option value="">Select Entry</option>
+                <option value="">Select Entry Type</option>
                 <option value="udhari">उधारी</option>
                 <option value="supplier">Supplier</option>
             </select>
-
         </section>
 
-        <!-- ================= UDHARI FORM ================= -->
-        <section class="entry" id="udhariForm" style="display:none;">
+        <!-- UDHARI FORM -->
+        <section class="entry-form" id="udhariForm" style="display:none;">
             <h2>उधारी एंट्री</h2>
 
             <form>
@@ -87,12 +210,12 @@
                 <input type="number" placeholder="सुबह का दूध">
                 <input type="number" placeholder="शाम का दूध">
                 <input type="number" placeholder="₹ प्रति लीटर रेट" required>
-                <button type="submit">Save</button>
+                <button type="submit">Save Record</button>
             </form>
         </section>
 
-        <!-- ================= SUPPLIER FORM ================= -->
-        <section class="entry" id="supplierForm" style="display:none;">
+        <!-- SUPPLIER FORM -->
+        <section class="entry-form" id="supplierForm" style="display:none;">
             <h2>Supplier Entry</h2>
 
             <form>
@@ -102,15 +225,18 @@
                 <input type="number" placeholder="शाम का दूध" required>
                 <input type="number" placeholder="₹ Amount" required>
                 <input type="number" placeholder="Mobile Number" required>
-
-                <button type="submit">Save</button>
+                <button type="submit">Save Supplier</button>
             </form>
         </section>
 
-    </div>
-</div>
+        <section id="settings"></section>
 
-<!-- ================= JS ================= -->
+        <footer>
+            © 2026 Shivalkar Natural Dairy Farm
+        </footer>
+
+    </main>
+</div>
 
 </body>
 </html>
