@@ -126,8 +126,8 @@
             button.textContent = "Checking...";
 
             try {
-const response = await fetch("http://localhost:5000/api/dashboard-login", {
-        method: "POST",
+const response = await fetch("/api/dashboard-login", { 
+           method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
