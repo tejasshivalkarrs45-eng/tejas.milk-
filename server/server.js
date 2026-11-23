@@ -1,5 +1,6 @@
 
 require("dotenv").config();
+const cors = require("cors");
 
 const express = require("express");
 const path = require("path");
@@ -10,6 +11,15 @@ const app = express();
 
 app.set("trust proxy", 1);
 app.use(express.json());
+
+
+app.use(cors({
+    origin: [
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    ],
+    credentials: true
+}));
 
 // Frontend files
 app.use(express.static(path.join(__dirname, "..")));
