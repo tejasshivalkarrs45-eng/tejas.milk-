@@ -7,7 +7,7 @@
 <title>Records</title>
 
 <link rel="stylesheet" href="record.css">
-     <script src="record.js"defer></script>
+     <script src="record.js" defer></script>
 
 
 
@@ -38,8 +38,9 @@
                 <th>Total Milk</th>
                 <th>Amount</th>
                 <th>Edit</th>
-                <th>Delete</th>
+             
                 <th>Continue</th>
+                <th>Delete</th>
             </tr>
         </thead>
 
@@ -48,6 +49,33 @@
         </tbody>
     </table>
 
+</div>
+
+<!-- EDIT RECORD FORM -->
+<div id="editForm" class="edit-form" style="display:none;">
+    <h2>उधारी रिकॉर्ड सुधारें</h2>
+
+    <form id="updateRecordForm">
+        <input type="hidden" id="editId">
+
+        <label>नाम</label>
+        <input type="text" id="editName" required>
+
+        <label>मोबाइल नंबर</label>
+        <input type="tel" id="editMobile" required>
+
+        <label>सुबह का दूध</label>
+        <input type="number" id="editMorning" step="0.01" required>
+
+        <label>शाम का दूध</label>
+        <input type="number" id="editEvening" step="0.01" required>
+
+        <label>रेट प्रति लीटर</label>
+        <input type="number" id="editRate" step="0.01" required>
+
+        <button type="submit">Update Record</button>
+        <button type="button" id="cancelEdit">Cancel</button>
+    </form>
 </div>
 
 <!-- 🔵 HOME LINK -->

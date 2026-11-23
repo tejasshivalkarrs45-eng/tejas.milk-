@@ -14,10 +14,7 @@ app.use(express.json());
 
 
 app.use(cors({
-    origin: [
-        "http://127.0.0.1:5500",
-        "http://localhost:5500"
-    ],
+    origin: true,
     credentials: true
 }));
 
@@ -196,6 +193,72 @@ app.get("/api/record", requireDashboard, async (req, res) => {
     }
 });
 
+ // Delete Record
+app.delete("/api/record/:id", requireDashboard, async (req, res) => {
+    try {
+        const deletedRecord = await Record.findByIdAndDelete(req.params.id);
+
+        if (!deletedRecord) {
+            return res.status(404).json({
+                success: false,
+                message: "Record नहीं मिला।"
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Record सफलतापूर्वक Delete हो गया।"
+        });
+
+    } catch (err) {
+        console.error("Record Delete Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Record Delete Failed"
+        });
+    }
+});
+
+// Update Record
+app.put("/api/record/:id", requireDashboard, async (req, res) => {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid Record ID"
+            });
+        }
+
+        const updatedRecord = await Record.findByIdAndUpdate(
+            req.params.id,
+            { $set: req.body },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedRecord) {
+            return res.status(404).json({
+                success: false,
+                message: "Record नहीं मिला।"
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Record सफलतापूर्वक Update हो गया।",
+            data: updatedRecord
+        });
+
+    } catch (err) {
+        console.error("Record Update Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Record Update Failed"
+        });
+    }
+});
+
 // Save Supplier
 app.post("/api/supplier", requireDashboard, async (req, res) => {
     try {
@@ -227,6 +290,33 @@ app.get("/api/supplier", requireDashboard, async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Supplier Load Failed"
+        });
+    }
+});
+
+// Delete Supplier
+app.delete("/api/supplier/:id", requireDashboard, async (req, res) => {
+    try {
+        const deletedSupplier = await Supplier.findByIdAndDelete(req.params.id);
+
+        if (!deletedSupplier) {
+            return res.status(404).json({
+                success: false,
+                message: "Supplier Record नहीं मिला।"
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Supplier Record सफलतापूर्वक Delete हो गया।"
+        });
+
+    } catch (err) {
+        console.error("Supplier Delete Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Supplier Delete Failed"
         });
     }
 });

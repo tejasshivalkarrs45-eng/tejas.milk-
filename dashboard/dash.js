@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const entryType = document.getElementById("entryType");
     const udhariForm = document.getElementById("udhariForm");
     const supplierForm = document.getElementById("supplierForm");
-const API_URL = "";
+const API_URL = "https://shivalkar-dairy-backend.onrender.com";
 const HOME_URL = "/home/home.html";
 const LOGIN_URL = "/home/dashboard-login.html";
 
@@ -13,7 +13,7 @@ const LOGIN_URL = "/home/dashboard-login.html";
         try {
             const response = await fetch(`${API_URL}/api/dashboard-check`, {
                 method: "GET",
-                credentials: "same-origin",
+                credentials: "include",
                 cache: "no-store"
             });
 

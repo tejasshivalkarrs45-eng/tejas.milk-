@@ -1,42 +1,75 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Supplier Data</title>
-
-<link rel="stylesheet" href="sup.css">
-
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivalkar Dairy - Suppliers</title>
+    <link rel="stylesheet" href="sup.css">
 </head>
-
 <body>
 
-<h2>Supplier Data</h2>
+<div class="supplier-container">
 
-<!-- TOTAL BOX -->
-<div class="totals">
-    <div>Total Milk: <span id="totalMilk">0</span></div>
-    <div>Total ₹: <span id="totalAmount">0</span></div>
+    <header class="page-header">
+        <div>
+            <h1>🐄 SHIVALKAR</h1>
+            <p>NATURAL DAIRY FARM</p>
+            <span>Supplier Management</span>
+        </div>
+        <a href="/dashboard/dashboard.html" class="back-btn">← Dashboard</a>
+    </header>
+
+    <section class="summary-cards">
+        <div class="summary-card">
+            <span>🥛 Total Milk</span>
+            <h2 id="totalMilk">0 L</h2>
+        </div>
+
+        <div class="summary-card">
+            <span>💰 Total Amount</span>
+            <h2 id="totalAmount">₹0</h2>
+        </div>
+    </section>
+
+    <section class="table-section">
+        <div class="table-heading">
+            <div>
+                <h2>Supplier Records</h2>
+                <p>सभी Supplier का दूध और भुगतान हिसाब</p>
+            </div>
+            <input
+                type="search"
+                id="supplierSearch"
+                placeholder="नाम या मोबाइल से खोजें..."
+            >
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>नाम</th>
+                        <th>तारीख</th>
+                        <th>सुबह</th>
+                        <th>शाम</th>
+                        <th>Amount</th>
+                        <th>मोबाइल</th>
+                        <th>WhatsApp</th>
+                        <th>Delete</th>
+                        <th>Bill</th>
+                    </tr>
+                </thead>
+                <tbody id="tableData">
+                    <tr>
+                     <td colspan="9">Loading Supplier Data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
 </div>
-
-<!-- TABLE -->
-<table>
-    <thead>
-        <tr>
-            <th>नाम</th>
-            <th>तारीख</th>
-            <th>सुबह</th>
-            <th>शाम</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
-
-    <tbody id="tableData"></tbody>
-</table>
-
-
 
 <script src="sup.js"></script>
 </body>

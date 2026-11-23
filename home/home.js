@@ -109,12 +109,12 @@ document.addEventListener("DOMContentLoaded", () => {
             message.textContent = "";
 
             try {
-                const response = await fetch("/api/dashboard-login", {
+                const response = await fetch("https://shivalkar-dairy-backend.onrender.com/api/dashboard-login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    credentials: "same-origin",
+                    credentials: "include",
                     body: JSON.stringify({ password })
                 });
 
