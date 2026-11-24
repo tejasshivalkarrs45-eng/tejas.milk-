@@ -849,4 +849,217 @@ if (searchBox) {
     });
 }
 
+// ================================
+// SUPPLIER PERSONAL ID LIST
+// ================================
+
+const PROFILE_API_URL =
+    "https://shivalkar-dairy-backend.onrender.com/api/supplier-profile";
+
+let supplierProfiles = [];
+
+async function loadSupplierProfiles() {
+    const listBox = document.getElementById("supplierProfileList");
+
+    if (!listBox) return;
+
+    listBox.innerHTML = "Supplier List Loading...";
+
+    try {
+        const response = await fetch(PROFILE_API_URL, {
+            method: "GET",
+            credentials: "include"
+        });
+
+        if (response.status === 401) {
+            listBox.innerHTML =
+                "Dashboard Login कीजिए। Supplier List देखने के लिए Login जरूरी है।";
+            return;
+        }
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Supplier List Load नहीं हुई।");
+        }
+
+        supplierProfiles = result.data || [];
+        showSupplierProfiles(supplierProfiles);
+
+    } catch (error) {
+        console.error("Supplier Profile Error:", error);
+        listBox.innerHTML = "Supplier List Load नहीं हो सकी।";
+    }
+}
+
+
+// SUPPLIER PROFILE DISPLAY
+
+function showSupplierProfiles(data) {
+    const listBox = document.getElementById("supplierProfileList");
+
+    if (!listBox) return;
+
+    if (!data.length) {
+        listBox.innerHTML = "अभी कोई Supplier Personal ID नहीं बनी है।";
+        return;
+    }
+
+    listBox.innerHTML = data.map((item, index) => `
+        <div class="supplier-profile-card">
+            <div>
+                <h3>${index + 1}. ${escapeHTML(item.name || "")}</h3>
+                <p>📱 ${escapeHTML(item.mobile || "मोबाइल नहीं है")}</p>
+                <p>✉️ ${escapeHTML(item.email || "Email नहीं है")}</p>
+                <p>💰 Rate: ₹${Number(item.rate || 0).toFixed(2)} / लीटर</p>
+                <p>📅 ${item.createdAt
+                    ? new Date(item.createdAt).toLocaleDateString("hi-IN")
+                    : "-"}</p>
+            </div>
+        </div>
+    `).join("");
+}
+
+
+// PROFILE SEARCH
+
+const profileSearchBox =
+    document.getElementById("supplierProfileSearch");
+
+if (profileSearchBox) {
+    profileSearchBox.addEventListener("input", function () {
+        const searchText = this.value.toLowerCase().trim();
+
+        const filteredProfiles = supplierProfiles.filter(item =>
+            String(item.name || "").toLowerCase().includes(searchText) ||
+            String(item.mobile || "").toLowerCase().includes(searchText) ||
+            String(item.email || "").toLowerCase().includes(searchText)
+        );
+
+        showSupplierProfiles(filteredProfiles);
+    });
+}
+
+ // ================================
+ // ADD NEW SUPPLIER PERSONAL ID
+ // ================================
+
+const addSupplierBtn = document.getElementById("addSupplierBtn");
+const addSupplierForm = document.getElementById("addSupplierForm");
+
+const saveSupplierProfileBtn =
+    document.getElementById("saveSupplierProfileBtn");
+
+const cancelSupplierProfileBtn =
+    document.getElementById("cancelSupplierProfileBtn");
+
+if (addSupplierBtn && addSupplierForm) {
+    addSupplierBtn.addEventListener("click", function () {
+        addSupplierForm.style.display = "block";
+        addSupplierForm.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    });
+}
+
+if (cancelSupplierProfileBtn) {
+    cancelSupplierProfileBtn.addEventListener("click", function () {
+        addSupplierForm.style.display = "none";
+    });
+}
+
+if (saveSupplierProfileBtn) {
+    saveSupplierProfileBtn.addEventListener("click", async function () {
+
+        const name = document.getElementById("newSupplierName").value.trim();
+        const mobile = document.getElementById("newSupplierMobile").value.trim();
+        const email = document.getElementById("newSupplierEmail").value.trim();
+        const rate = document.getElementById("newSupplierRate").value;
+        const openingBalance =
+            document.getElementById("newSupplierOpening").value || 0;
+
+        if (!name || !mobile || rate === "") {
+            await showPopup("नाम, मोबाइल और Rate भरना जरूरी है।", "error");
+            return;
+        }
+
+        if (!/^\d{10}$/.test(mobile)) {
+            await showPopup("10 अंकों का सही मोबाइल नंबर डालें।", "error");
+            return;
+        }
+
+        if (
+            !Number.isFinite(Number(rate)) ||
+            Number(rate) < 0 ||
+            !Number.isFinite(Number(openingBalance)) ||
+            Number(openingBalance) < 0
+        ) {
+            await showPopup("Rate और Opening Balance सही भरें।", "error");
+            return;
+        }
+
+        saveSupplierProfileBtn.disabled = true;
+        saveSupplierProfileBtn.textContent = "Saving...";
+
+        try {
+            const response = await fetch(PROFILE_API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    name,
+                    mobile,
+                    email,
+                    rate: Number(rate),
+                    openingBalance: Number(openingBalance)
+                })
+            });
+
+            const responseText = await response.text();
+            let result;
+
+            try {
+                result = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error("Server Response:", responseText);
+
+                throw new Error(
+                    "Server से JSON नहीं मिला। HTTP Status: " +
+                    response.status +
+                    ". Render Backend URL या API Route जाँचनी होगी।"
+                );
+            }
+
+            if (response.status === 401) {
+                throw new Error("कृपया Dashboard में दोबारा Login करें।");
+            }
+
+            if (!response.ok || !result.success) {
+                throw new Error(
+                    result.message || "Supplier सेव नहीं हुआ।"
+                );
+            }
+
+            addSupplierForm.reset();
+            addSupplierForm.style.display = "none";
+
+            await loadSupplierProfiles();
+
+            await showPopup("Supplier Personal ID सफलतापूर्वक बन गई!");
+
+        } catch (error) {
+            console.error("Save Supplier Error:", error);
+            await showPopup(error.message, "error");
+
+        } finally {
+            saveSupplierProfileBtn.disabled = false;
+            saveSupplierProfileBtn.textContent = "Save Supplier";
+        }
+    });
+}
+
+loadSupplierProfiles();
 loadData();

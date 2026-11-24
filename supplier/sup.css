@@ -1,4 +1,8 @@
 
+/* ==============================
+   SHIVALKAR DAIRY - SUPPLIER CSS
+================================ */
+
 * {
     margin: 0;
     padding: 0;
@@ -7,7 +11,7 @@
 
 body {
     font-family: "Segoe UI", Arial, sans-serif;
-    background: #f3f7f4;
+    background: #f3f7f5;
     color: #24352b;
     padding: 25px;
 }
@@ -18,8 +22,9 @@ body {
 }
 
 /* HEADER */
+
 .page-header {
-    background: linear-gradient(120deg, #075c36, #15945b);
+    background: linear-gradient(120deg, #064b30, #15945b);
     color: white;
     padding: 28px 32px;
     border-radius: 18px;
@@ -30,12 +35,12 @@ body {
 }
 
 .page-header h1 {
-    font-size: 27px;
+    font-size: 28px;
     letter-spacing: 2px;
 }
 
 .page-header p {
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 3px;
     margin-top: 5px;
 }
@@ -44,23 +49,66 @@ body {
     display: inline-block;
     margin-top: 12px;
     color: #d5f8e3;
+    font-size: 14px;
 }
 
 .back-btn {
     color: #075c36;
     background: white;
-    padding: 12px 18px;
+    padding: 12px 19px;
     border-radius: 10px;
     text-decoration: none;
     font-weight: bold;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background: #e3f8eb;
+    transform: translateY(-2px);
+}
+
+/* DATE SECTION */
+
+.date-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin: 25px 5px 10px;
+}
+
+.date-section h2 {
+    color: #075c36;
+    font-size: 23px;
+}
+
+.date-section p {
+    color: #77857c;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.date-info {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    gap: 5px;
+    color: #52665a;
+    font-size: 13px;
+}
+
+.date-info strong {
+    color: #08713f;
+    font-size: 15px;
 }
 
 /* SUMMARY CARDS */
+
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 22px;
-    margin: 25px 0;
+    margin: 22px 0;
 }
 
 .summary-card {
@@ -89,7 +137,71 @@ body {
     margin-top: 12px;
 }
 
+.summary-card small {
+    display: block;
+    color: #89958d;
+    margin-top: 7px;
+}
+
+/* NOTIFICATION SECTION */
+
+.notification-section {
+    background: linear-gradient(110deg, #ffffff, #effaf3);
+    border: 1px solid #dceee2;
+    border-left: 5px solid #15945b;
+    border-radius: 15px;
+    padding: 20px 24px;
+    margin: 22px 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    transition: 0.3s;
+}
+
+.notification-section:hover {
+    box-shadow: 0 8px 20px rgba(0, 80, 40, 0.09);
+}
+
+.notification-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 13px;
+    background: #dff5e7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-content h3 {
+    color: #075c36;
+    font-size: 17px;
+}
+
+.notification-content p {
+    color: #75847a;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.notification-status {
+    background: #e0f5e8;
+    color: #08713f;
+    padding: 9px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
 /* TABLE SECTION */
+
 .table-section {
     background: white;
     padding: 25px;
@@ -117,13 +229,14 @@ body {
 }
 
 #supplierSearch {
-    width: 300px;
+    width: 320px;
     max-width: 100%;
     padding: 13px 16px;
     border: 1px solid #dce7df;
     border-radius: 10px;
     outline: none;
     font-size: 14px;
+    transition: 0.3s;
 }
 
 #supplierSearch:focus {
@@ -132,6 +245,7 @@ body {
 }
 
 /* TABLE */
+
 .table-wrapper {
     width: 100%;
     overflow-x: auto;
@@ -146,7 +260,7 @@ table {
 }
 
 thead {
-    background: #075c36;
+    background: linear-gradient(110deg, #075c36, #117b4b);
     color: white;
 }
 
@@ -171,44 +285,35 @@ tbody tr:hover {
     background: #f0faf4;
 }
 
-/* MOBILE */
-@media (max-width: 768px) {
-    body {
-        padding: 12px;
-    }
+/* BUTTONS INSIDE TABLE */
 
-    .page-header {
-        padding: 20px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-    }
+td button {
+    cursor: pointer;
+    border: none;
+    border-radius: 7px;
+    padding: 7px 11px;
+    font-size: 12px;
+    transition: 0.2s;
+}
 
-    .page-header h1 {
-        font-size: 23px;
-    }
+td button:hover {
+    transform: translateY(-2px);
+    opacity: 0.85;
+}
 
-    .summary-cards {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
+/* FOOTER */
 
-    .summary-card {
-        padding: 20px;
-    }
+.page-footer {
+    text-align: center;
+    padding: 25px 10px;
+    color: #63766a;
+    font-size: 13px;
+}
 
-    .table-section {
-        padding: 15px;
-    }
-
-    .table-heading {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    #supplierSearch {
-        width: 100%;
-    }
+.page-footer small {
+    display: block;
+    margin-top: 5px;
+    color: #9aa79e;
 }
 
 /* PROFESSIONAL POPUP */
@@ -324,3 +429,80 @@ tbody tr:hover {
     }
 }
 
+/* MOBILE RESPONSIVE */
+
+@media (max-width: 768px) {
+    body {
+        padding: 12px;
+    }
+
+    .page-header {
+        padding: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .page-header h1 {
+        font-size: 23px;
+    }
+
+    .date-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .date-info {
+        text-align: left;
+    }
+
+    .summary-cards {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .summary-card {
+        padding: 20px;
+    }
+
+    .notification-section {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        padding: 17px;
+    }
+
+    .notification-status {
+        margin-left: 64px;
+    }
+
+    .table-section {
+        padding: 15px;
+    }
+
+    .table-heading {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #supplierSearch {
+        width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .page-header h1 {
+        font-size: 20px;
+    }
+
+    .date-section h2 {
+        font-size: 20px;
+    }
+
+    .summary-card h2 {
+        font-size: 24px;
+    }
+
+    .notification-content p {
+        line-height: 1.5;
+    }
+}

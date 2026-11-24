@@ -4,49 +4,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shivalkar Dairy - Suppliers</title>
+
+    <title>Shivalkar Dairy - Supplier Management</title>
+
     <link rel="stylesheet" href="sup.css">
 </head>
+
 <body>
 
 <div class="supplier-container">
 
+    <!-- HEADER -->
     <header class="page-header">
-        <div>
+        <div class="brand">
             <h1>🐄 SHIVALKAR</h1>
             <p>NATURAL DAIRY FARM</p>
-            <span>Supplier Management</span>
+            <span>Supplier Management System</span>
         </div>
-        <a href="/dashboard/dashboard.html" class="back-btn">← Dashboard</a>
+
+        <a href="/dashboard/dashboard.html" class="back-btn">
+            ← Dashboard
+        </a>
     </header>
 
+    <!-- DATE SECTION -->
+    <section class="date-section">
+        <div>
+            <h2>Supplier Management</h2>
+            <p>अपने सभी Supplier का पूरा हिसाब यहाँ देखें।</p>
+        </div>
+
+        <div class="date-info">
+            <span id="currentDate">Loading...</span>
+            <strong id="currentMonth">Loading...</strong>
+        </div>
+    </section>
+
+    <!-- SUMMARY -->
     <section class="summary-cards">
+
         <div class="summary-card">
             <span>🥛 Total Milk</span>
             <h2 id="totalMilk">0 L</h2>
+            <small>कुल दूध</small>
         </div>
 
         <div class="summary-card">
             <span>💰 Total Amount</span>
             <h2 id="totalAmount">₹0</h2>
+            <small>कुल रकम</small>
         </div>
+
     </section>
 
-    <section class="table-section">
+    <!-- NEW SUPPLIER PERSONAL ID LIST -->
+    <section class="table-section supplier-profile-section">
+
         <div class="table-heading">
             <div>
-                <h2>Supplier Records</h2>
-                <p>सभी Supplier का दूध और भुगतान हिसाब</p>
+                <h2>👥 Supplier Personal ID</h2>
+                <p>सभी Supplier की व्यक्तिगत जानकारी और अकाउंट</p>
             </div>
+
+            <button type="button" id="addSupplierBtn" class="add-supplier-btn">
+                + Add New Supplier
+            </button>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="profile-search">
+            <input
+                type="search"
+                id="supplierProfileSearch"
+                placeholder="नाम, मोबाइल या Email से खोजें..."
+            >
+        </div>
+
+        <!-- SUPPLIER LIST -->
+        <div id="supplierProfileList" class="supplier-profile-list">
+
+            <div class="profile-loading">
+                Supplier List Loading...
+            </div>
+
+        </div>
+
+    </section>
+
+<!-- ADD NEW SUPPLIER FORM -->
+
+<div id="addSupplierForm" class="add-supplier-form" style="display: none;">
+
+    <h3>➕ Create Supplier Personal ID</h3>
+
+    <label>Supplier Name</label>
+    <input type="text" id="newSupplierName" placeholder="Supplier का नाम">
+
+    <label>Mobile Number</label>
+    <input type="tel" id="newSupplierMobile" placeholder="मोबाइल नंबर">
+
+    <label>Email</label>
+    <input type="email" id="newSupplierEmail" placeholder="Email (Optional)">
+
+    <label>Rate Per Liter (₹)</label>
+    <input type="number" id="newSupplierRate" placeholder="दूध का रेट" min="0" step="0.01">
+
+    <label>Opening Balance (₹)</label>
+    <input type="number" id="newSupplierOpening" placeholder="पुराना बकाया (न हो तो 0)" min="0" step="0.01" value="0">
+
+    <div class="supplier-form-actions">
+        <button type="button" id="saveSupplierProfileBtn">Save Supplier</button>
+        <button type="button" id="cancelSupplierProfileBtn">Cancel</button>
+    </div>
+
+</div>
+
+    <!-- NOTIFICATION PREVIEW -->
+    <section class="notification-section">
+        <div class="notification-icon">🔔</div>
+
+        <div class="notification-content">
+            <h3>Supplier Notifications</h3>
+            <p>बिल, भुगतान और दूध की एंट्री से जुड़ी सूचनाएँ यहाँ दिखाई देंगी।</p>
+        </div>
+
+        <span class="notification-status">Notification Center</span>
+    </section>
+
+    <!-- OLD SUPPLIER RECORDS - KEEP SAFE -->
+    <section class="table-section">
+
+        <div class="table-heading">
+
+            <div>
+                <h2>📋 Supplier Records</h2>
+                <p>सभी पुराने Supplier का दूध और भुगतान हिसाब</p>
+            </div>
+
             <input
                 type="search"
                 id="supplierSearch"
                 placeholder="नाम या मोबाइल से खोजें..."
             >
+
         </div>
 
         <div class="table-wrapper">
+
             <table>
+
                 <thead>
                     <tr>
                         <th>नाम</th>
@@ -60,17 +166,46 @@
                         <th>Bill</th>
                     </tr>
                 </thead>
+
                 <tbody id="tableData">
                     <tr>
-                     <td colspan="9">Loading Supplier Data...</td>
+                        <td colspan="9">
+                            Loading Supplier Data...
+                        </td>
                     </tr>
                 </tbody>
+
             </table>
+
         </div>
+
     </section>
+
+    <footer class="page-footer">
+        <p>© SHIVALKAR NATURAL DAIRY FARM</p>
+        <small>Supplier Management System</small>
+    </footer>
 
 </div>
 
+<script>
+    const today = new Date();
+
+    document.getElementById("currentDate").textContent =
+        today.toLocaleDateString("hi-IN", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+
+    document.getElementById("currentMonth").textContent =
+        today.toLocaleDateString("hi-IN", {
+            month: "long",
+            year: "numeric"
+        });
+</script>
+
 <script src="sup.js"></script>
+
 </body>
 </html>

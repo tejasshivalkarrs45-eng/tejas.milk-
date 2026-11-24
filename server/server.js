@@ -1,5 +1,7 @@
 
-require("dotenv").config();
+require("dotenv").config({
+    path: __dirname + "/.env"
+});
 const cors = require("cors");
 
 const express = require("express");
@@ -158,6 +160,128 @@ const Record = mongoose.models.Record ||
 const Supplier = mongoose.models.Supplier ||
     mongoose.model("Supplier", supplierSchema);
 
+// NEW SUPPLIER PERSONAL ID MODEL
+const supplierProfileSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    mobile: {
+        type: String,
+        default: ""
+    },
+    email: {
+        type: String,
+        default: ""
+    },
+    rate: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+
+openingBalance: {
+    type: Number,
+    default: 0,
+    min: 0
+},
+
+    rateHistory: [{
+        rate: {
+            type: Number,
+            required: true
+        },
+        effectiveFrom: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    status: {
+        type: String,
+        default: "Active"
+    }
+}, {
+    timestamps: true
+});
+
+const SupplierProfile = mongoose.models.SupplierProfile ||
+    mongoose.model("SupplierProfile", supplierProfileSchema);
+
+// DAILY MILK ENTRY MODEL
+const milkEntrySchema = new mongoose.Schema({
+    supplierId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "SupplierProfile",
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    morning: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+    evening: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+    rate: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    totalMilk: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    amount: {
+        type: Number,
+        required: true,
+        min: 0
+    }
+}, {
+    timestamps: true
+});
+
+const MilkEntry = mongoose.models.MilkEntry ||
+    mongoose.model("MilkEntry", milkEntrySchema);
+
+// SUPPLIER PAYMENT MODEL
+const paymentSchema = new mongoose.Schema({
+    supplierId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "SupplierProfile",
+        required: true
+    },
+    amount: {
+        type: Number,
+        required: true,
+        min: 0.01
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    paymentMode: {
+        type: String,
+        default: "Cash"
+    },
+    note: {
+        type: String,
+        default: ""
+    }
+}, {
+    timestamps: true
+});
+
+const Payment = mongoose.models.Payment ||
+    mongoose.model("Payment", paymentSchema);
+
 // Save Record
 app.post("/api/record", requireDashboard, async (req, res) => {
     try {
@@ -255,6 +379,517 @@ app.put("/api/record/:id", requireDashboard, async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Record Update Failed"
+        });
+    }
+});
+
+// CREATE SUPPLIER PERSONAL ID
+
+// CREATE SUPPLIER PERSONAL ID
+app.post("/api/supplier-profile", requireDashboard, async (req, res) => {
+    try {
+        const { name, mobile, email, rate, openingBalance } = req.body;
+
+        if (!name || rate === undefined || rate === null || rate === "") {
+            return res.status(400).json({
+                success: false,
+                message: "Supplier Name और Rate जरूरी हैं।"
+            });
+        }
+
+        const supplierRate = Number(rate);
+        const oldBalance = Number(openingBalance || 0);
+
+        if (!Number.isFinite(supplierRate) || supplierRate < 0) {
+            return res.status(400).json({
+                success: false,
+                message: "सही Rate दर्ज करें।"
+            });
+        }
+
+        if (!Number.isFinite(oldBalance) || oldBalance < 0) {
+            return res.status(400).json({
+                success: false,
+                message: "सही Opening Balance दर्ज करें।"
+            });
+        }
+
+        const savedProfile = await SupplierProfile.create({
+            name: name.trim(),
+            mobile: String(mobile || "").trim(),
+            email: String(email || "").trim(),
+            rate: supplierRate,
+            openingBalance: oldBalance,
+            rateHistory: [{
+                rate: supplierRate,
+                effectiveFrom: new Date()
+            }]
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Supplier Personal ID बन गई।",
+            data: savedProfile
+        });
+
+    } catch (err) {
+        console.error("Supplier Profile Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Supplier Personal ID नहीं बन पाई।"
+        });
+    }
+});
+
+// GET SINGLE SUPPLIER PERSONAL ID
+app.get("/api/supplier-profile/:id", requireDashboard, async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Supplier ID सही नहीं है।"
+            });
+        }
+
+        const supplier = await SupplierProfile.findById(id);
+
+        if (!supplier) {
+            return res.status(404).json({
+                success: false,
+                message: "Supplier नहीं मिला।"
+            });
+        }
+
+        res.json({
+            success: true,
+            data: supplier
+        });
+
+    } catch (err) {
+        console.error("Supplier Profile Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Supplier की जानकारी लोड नहीं हुई।"
+        });
+    }
+});
+
+// GET ALL SUPPLIER PERSONAL IDs
+app.get("/api/supplier-profile", requireDashboard, async (req, res) => {
+    try {
+        const profiles = await SupplierProfile.find()
+            .sort({ createdAt: -1 });
+
+        res.json({
+            success: true,
+            data: profiles
+        });
+
+    } catch (err) {
+        console.error("Supplier Profile Load Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Supplier List Load नहीं हुई।"
+        });
+    }
+});
+
+// GET SUPPLIER MILK HISTORY
+app.get("/api/milk-entry/:supplierId", requireDashboard, async (req, res) => {
+    try {
+        const { supplierId } = req.params;
+
+        if (!mongoose.isValidObjectId(supplierId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Supplier ID सही नहीं है।"
+            });
+        }
+
+        const supplier = await SupplierProfile.findById(supplierId);
+
+        if (!supplier) {
+            return res.status(404).json({
+                success: false,
+                message: "Supplier नहीं मिला।"
+            });
+        }
+
+        const entries = await MilkEntry.find({
+            supplierId: supplierId
+        }).sort({ date: -1, createdAt: -1 });
+
+        res.json({
+            success: true,
+            data: entries
+        });
+
+    } catch (err) {
+        console.error("Milk History Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Milk History लोड नहीं हुई।"
+        });
+    }
+});
+
+
+// SAVE DAILY MILK ENTRY
+app.post("/api/milk-entry", requireDashboard, async (req, res) => {
+    try {
+        const { supplierId, morning, evening } = req.body;
+
+        if (!mongoose.isValidObjectId(supplierId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Supplier ID सही नहीं है।"
+            });
+        }
+
+        const supplier = await SupplierProfile.findById(supplierId);
+
+        if (!supplier) {
+            return res.status(404).json({
+                success: false,
+                message: "Supplier नहीं मिला।"
+            });
+        }
+
+        const morningMilk = Number(morning);
+        const eveningMilk = Number(evening);
+
+        if (
+            !Number.isFinite(morningMilk) ||
+            !Number.isFinite(eveningMilk) ||
+            morningMilk < 0 ||
+            eveningMilk < 0 ||
+            morningMilk + eveningMilk <= 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "सुबह या शाम का सही दूध दर्ज करें।"
+            });
+        }
+
+        // Supplier ID से वर्तमान Rate लेना
+        const currentRate = Number(supplier.rate);
+
+        // कुल दूध और रकम अपने आप निकालना
+        const totalMilk = morningMilk + eveningMilk;
+        const amount = Number((totalMilk * currentRate).toFixed(2));
+
+        const savedEntry = await MilkEntry.create({
+            supplierId: supplier._id,
+            date: new Date(),
+            morning: morningMilk,
+            evening: eveningMilk,
+            rate: currentRate,
+            totalMilk: totalMilk,
+            amount: amount
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "दूध की एंट्री सफलतापूर्वक सेव हो गई।",
+            data: savedEntry
+        });
+
+    } catch (err) {
+        console.error("Milk Entry Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "दूध की एंट्री सेव नहीं हुई।"
+        });
+    }
+});
+
+// UPDATE SUPPLIER OPENING BALANCE
+app.put("/api/supplier-profile/:id/opening-balance", requireDashboard, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const openingBalance = Number(req.body.openingBalance);
+
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Supplier ID सही नहीं है।"
+            });
+        }
+
+        if (
+            req.body.openingBalance === undefined ||
+            req.body.openingBalance === null ||
+            req.body.openingBalance === "" ||
+            !Number.isFinite(openingBalance) ||
+            openingBalance < 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "कृपया सही Opening Balance दर्ज करें।"
+            });
+        }
+
+        const supplier = await SupplierProfile.findById(id);
+
+        if (!supplier) {
+            return res.status(404).json({
+                success: false,
+                message: "Supplier नहीं मिला।"
+            });
+        }
+
+        supplier.openingBalance = openingBalance;
+        await supplier.save();
+
+        res.json({
+            success: true,
+            message: "Opening Balance सफलतापूर्वक Update हो गया।",
+            data: supplier
+        });
+
+    } catch (err) {
+        console.error("Opening Balance Update Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Opening Balance Update नहीं हुआ।"
+        });
+    }
+});
+
+
+// UPDATE SUPPLIER RATE
+app.put("/api/supplier-profile/:id/rate", requireDashboard, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const newRate = Number(req.body.rate);
+
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Supplier ID सही नहीं है।"
+            });
+        }
+
+        if (
+            req.body.rate === undefined ||
+            req.body.rate === null ||
+            req.body.rate === "" ||
+            !Number.isFinite(newRate) ||
+            newRate < 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "कृपया सही नया Rate दर्ज करें।"
+            });
+        }
+
+        const supplier = await SupplierProfile.findById(id);
+
+        if (!supplier) {
+            return res.status(404).json({
+                success: false,
+                message: "Supplier नहीं मिला।"
+            });
+        }
+
+        supplier.rate = newRate;
+
+        supplier.rateHistory.push({
+            rate: newRate,
+            effectiveFrom: new Date()
+        });
+
+        await supplier.save();
+
+        res.json({
+            success: true,
+            message: "Supplier का नया Rate सफलतापूर्वक Update हो गया।",
+            data: supplier
+        });
+
+    } catch (err) {
+        console.error("Rate Update Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Rate Update नहीं हुआ।"
+        });
+    }
+});
+
+
+// SAVE SUPPLIER PAYMENT
+
+app.post("/api/payment", requireDashboard, async (req, res) => {
+    try {
+        const { supplierId, amount, paymentMode, note } = req.body;
+
+        if (!mongoose.isValidObjectId(supplierId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Supplier ID सही नहीं है।"
+            });
+        }
+
+        const paymentAmount = Number(amount);
+
+        if (
+            amount === undefined ||
+            amount === null ||
+            amount === "" ||
+            !Number.isFinite(paymentAmount) ||
+            paymentAmount <= 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "कृपया सही Payment राशि दर्ज करें।"
+            });
+        }
+
+        const supplier = await SupplierProfile.findById(supplierId);
+
+        if (!supplier) {
+            return res.status(404).json({
+                success: false,
+                message: "Supplier नहीं मिला।"
+            });
+        }
+
+        const savedPayment = await Payment.create({
+            supplierId: supplier._id,
+            amount: paymentAmount,
+            paymentMode: paymentMode || "Cash",
+            note: note || "",
+            date: new Date()
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Payment सफलतापूर्वक सेव हो गया।",
+            data: savedPayment
+        });
+
+    } catch (err) {
+        console.error("Payment Save Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Payment सेव नहीं हुआ।"
+        });
+    }
+});
+
+// GET SUPPLIER PAYMENT HISTORY
+app.get("/api/payment/:supplierId", requireDashboard, async (req, res) => {
+    try {
+        const { supplierId } = req.params;
+
+        if (!mongoose.isValidObjectId(supplierId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Supplier ID सही नहीं है।"
+            });
+        }
+
+        const supplier = await SupplierProfile.findById(supplierId);
+
+        if (!supplier) {
+            return res.status(404).json({
+                success: false,
+                message: "Supplier नहीं मिला।"
+            });
+        }
+
+        const payments = await Payment.find({
+            supplierId: supplierId
+        }).sort({ date: -1, createdAt: -1 });
+
+        res.json({
+            success: true,
+            data: payments
+        });
+
+    } catch (err) {
+        console.error("Payment History Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Payment History लोड नहीं हुई।"
+        });
+    }
+});
+
+// GET COMPLETE SUPPLIER ACCOUNT
+app.get("/api/supplier-account/:supplierId", requireDashboard, async (req, res) => {
+    try {
+        const { supplierId } = req.params;
+
+        if (!mongoose.isValidObjectId(supplierId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Supplier ID सही नहीं है।"
+            });
+        }
+
+        const supplier = await SupplierProfile.findById(supplierId);
+
+        if (!supplier) {
+            return res.status(404).json({
+                success: false,
+                message: "Supplier नहीं मिला।"
+            });
+        }
+
+        const [milkEntries, payments] = await Promise.all([
+            MilkEntry.find({ supplierId }).sort({ date: -1 }),
+            Payment.find({ supplierId }).sort({ date: -1 })
+        ]);
+
+        const totalMilk = milkEntries.reduce(
+            (sum, item) => sum + Number(item.totalMilk || 0), 0
+        );
+
+        const totalAmount = milkEntries.reduce(
+            (sum, item) => sum + Number(item.amount || 0), 0
+        );
+
+        const totalPaid = payments.reduce(
+            (sum, item) => sum + Number(item.amount || 0), 0
+        );
+
+       const openingBalance = Number(supplier.openingBalance || 0);
+
+const balance = Number(
+    (openingBalance + totalAmount - totalPaid).toFixed(2)
+);
+        res.json({
+            success: true,
+            data: {
+                supplier,
+                openingBalance,
+                totalMilk: Number(totalMilk.toFixed(2)),
+                totalAmount: Number(totalAmount.toFixed(2)),
+                totalPaid: Number(totalPaid.toFixed(2)),
+                balance,
+                milkEntries,
+                payments
+            }
+        });
+
+    } catch (err) {
+        console.error("Supplier Account Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Supplier का हिसाब लोड नहीं हुआ।"
         });
     }
 });
