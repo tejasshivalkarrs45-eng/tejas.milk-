@@ -159,7 +159,263 @@ const Record = mongoose.models.Record ||
 
 const Supplier = mongoose.models.Supplier ||
     mongoose.model("Supplier", supplierSchema);
+// NEW CUSTOMER MODEL
 
+const customerSchema = new mongoose.Schema({
+    customerId: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    mobile: {
+        type: String,
+        default: ""
+    },
+    address: {
+        type: String,
+        default: ""
+    },
+    rate: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    status: {
+        type: String,
+        default: "Active"
+    }
+}, {
+    timestamps: true
+});
+// GENERATE CUSTOMER ID
+
+async function generateCustomerId() {
+    const lastCustomer = await Customer.findOne()
+        .sort({ createdAt: -1 });
+
+    let nextNumber = 1;
+
+    if (lastCustomer && lastCustomer.customerId) {
+        const lastNumber = Number(
+            lastCustomer.customerId.replace("SHV-", "")
+        );
+
+        nextNumber = lastNumber + 1;
+    }
+
+    return "SHV-" + String(nextNumber).padStart(4, "0");
+}
+
+
+// ADD NEW CUSTOMER API
+
+app.post("/api/customer", requireDashboard, async (req, res) => {
+    try {
+        const { name, mobile, address, rate } = req.body;
+
+        if (!name || rate === undefined || rate === null || rate === "") {
+            return res.status(400).json({
+                success: false,
+                message: "Customer Name और Rate जरूरी हैं।"
+            });
+        }
+
+        const customerRate = Number(rate);
+
+        if (!Number.isFinite(customerRate) || customerRate < 0) {
+            return res.status(400).json({
+                success: false,
+                message: "सही Milk Rate दर्ज करें।"
+            });
+        }
+
+        const customerId = await generateCustomerId();
+
+        const savedCustomer = await Customer.create({
+            customerId,
+            name: name.trim(),
+            mobile: String(mobile || "").trim(),
+            address: String(address || "").trim(),
+            rate: customerRate
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Customer सफलतापूर्वक सेव हो गया।",
+            data: savedCustomer
+        });
+
+    } catch (err) {
+        console.error("Customer Save Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Customer सेव नहीं हुआ।"
+        });
+    }
+});
+// GET ALL CUSTOMERS API
+
+app.get("/api/customer", requireDashboard, async (req, res) => {
+    try {
+        const customers = await Customer.find()
+            .sort({ createdAt: -1 });
+
+        res.json({
+            success: true,
+            data: customers
+        });
+
+    } catch (err) {
+        console.error("Customer Load Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Customer List लोड नहीं हुई।"
+        });
+    }
+});
+// UPDATE CUSTOMER API
+
+app.put("/api/customer/:id", requireDashboard, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, mobile, address, rate } = req.body;
+
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Customer ID सही नहीं है।"
+            });
+        }
+
+        const customer = await Customer.findById(id);
+
+        if (!customer) {
+            return res.status(404).json({
+                success: false,
+                message: "Customer नहीं मिला।"
+            });
+        }
+
+        const newRate = Number(rate);
+
+        if (
+            !name?.trim() ||
+            rate === undefined ||
+            rate === null ||
+            rate === "" ||
+            !Number.isFinite(newRate) ||
+            newRate < 0
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "सही Customer Name और Rate दर्ज करें।"
+            });
+        }
+
+        customer.name = name.trim();
+        customer.mobile = String(mobile || "").trim();
+        customer.address = String(address || "").trim();
+        customer.rate = newRate;
+
+        await customer.save();
+
+        res.json({
+            success: true,
+            message: "Customer सफलतापूर्वक Update हो गया।",
+            data: customer
+        });
+
+    } catch (err) {
+        console.error("Customer Update Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Customer Update नहीं हुआ।"
+        });
+    }
+});
+// DELETE CUSTOMER API
+
+app.delete("/api/customer/:id", requireDashboard, async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Customer ID सही नहीं है।"
+            });
+        }
+
+        const deletedCustomer = await Customer.findByIdAndDelete(id);
+
+        if (!deletedCustomer) {
+            return res.status(404).json({
+                success: false,
+                message: "Customer नहीं मिला।"
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Customer सफलतापूर्वक Delete हो गया।"
+        });
+
+    } catch (err) {
+        console.error("Customer Delete Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Customer Delete नहीं हुआ।"
+        });
+    }
+});
+// GET SINGLE CUSTOMER API
+
+app.get("/api/customer/:id", requireDashboard, async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Customer ID सही नहीं है।"
+            });
+        }
+
+        const customer = await Customer.findById(id);
+
+        if (!customer) {
+            return res.status(404).json({
+                success: false,
+                message: "Customer नहीं मिला।"
+            });
+        }
+
+        res.json({
+            success: true,
+            data: customer
+        });
+
+    } catch (err) {
+        console.error("Customer Details Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Customer की जानकारी लोड नहीं हुई।"
+        });
+    }
+});
+
+const Customer = mongoose.models.Customer ||
+    mongoose.model("Customer", customerSchema);
 // NEW SUPPLIER PERSONAL ID MODEL
 const supplierProfileSchema = new mongoose.Schema({
     name: {
@@ -498,6 +754,75 @@ app.get("/api/supplier-profile", requireDashboard, async (req, res) => {
         });
     }
 });
+
+
+// EDIT SUPPLIER PERSONAL ID
+app.put("/api/supplier-profile/:id", requireDashboard, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, mobile, email, rate, openingBalance } = req.body;
+
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Supplier ID सही नहीं है।"
+            });
+        }
+
+        const supplier = await SupplierProfile.findById(id);
+
+        if (!supplier) {
+            return res.status(404).json({
+                success: false,
+                message: "Supplier नहीं मिला।"
+            });
+        }
+
+        const newName = String(name || "").trim();
+        const newRate = Number(rate);
+        const newOpeningBalance = Number(openingBalance);
+
+        if (!newName || !Number.isFinite(newRate) || newRate < 0 ||
+            !Number.isFinite(newOpeningBalance) || newOpeningBalance < 0) {
+            return res.status(400).json({
+                success: false,
+                message: "सही नाम, Rate और Opening Balance दर्ज करें।"
+            });
+        }
+
+        supplier.name = newName;
+        supplier.mobile = String(mobile || "").trim();
+        supplier.email = String(email || "").trim();
+        supplier.openingBalance = newOpeningBalance;
+
+        // Rate बदलने पर ही Rate History अपडेट होगी
+        if (newRate !== Number(supplier.rate)) {
+            supplier.rate = newRate;
+
+            supplier.rateHistory.push({
+                rate: newRate,
+                effectiveFrom: new Date()
+            });
+        }
+
+        await supplier.save();
+
+        res.json({
+            success: true,
+            message: "Supplier की जानकारी अपडेट हो गई।",
+            data: supplier
+        });
+
+    } catch (err) {
+        console.error("Supplier Update Error:", err);
+
+        res.status(500).json({
+            success: false,
+            message: "Supplier अपडेट नहीं हुआ।"
+        });
+    }
+});
+
 
 // GET SUPPLIER MILK HISTORY
 app.get("/api/milk-entry/:supplierId", requireDashboard, async (req, res) => {
