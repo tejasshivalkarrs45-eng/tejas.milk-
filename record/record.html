@@ -1,88 +1,358 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Records</title>
-
-<link rel="stylesheet" href="record.css">
-     <script src="record.js" defer></script>
-
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivalkar Dairy | Record Dashboard</title>
+    <link rel="stylesheet" href="record.css">
+    <script src="record.js" defer></script>
 </head>
-
 <body>
 
-<!-- 🔵 HEADER -->
-<header class="topbar">
-    <h2>SHIVALKAR <span>Natural Dairy Farm</span></h2>
-</header>
+<div class="dashboard-layout">
 
-<!-- 🔵 MAIN CONTAINER -->
-<div class="container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-logo">🐃</div>
+            <h2>SHIVALKAR</h2>
+            <h3>NATURAL DAIRY FARM</h3>
+            <p>Pure Milk... Healthy Life...</p>
+        </div>
 
-    <!-- 🔍 SEARCH -->
-    <input type="text" id="search" placeholder="Search by Name / Mobile">
+        <nav class="sidebar-menu">
+            <a href="../home/home.html">🏠 Home</a>
+            <a href="record.html" class="active">▤ Record</a>
+            <a href="../dashboard/dashboard.html">📊 Dashboard</a>
+            <a href="../supplier/sup.html">🚚 Supplier</a>
+            <a href="#">⚙️ Settings</a>
+            <a href="#">◷ Reports</a>
+            <a href="#">👤 Profile</a>
+            <a href="#" id="logoutButton">⇥ Logout</a>
+        </nav>
 
-    <!-- 📊 TABLE -->
-    <table>
-        <thead>
-            <tr>
-                <th>S.No</th>
-                <th>Name</th>
-                <th>Mobile</th>
-                <th>Morning</th>
-                <th>Evening</th>
-                <th>Total Milk</th>
-                <th>Amount</th>
-                <th>Edit</th>
-             
-                <th>Continue</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
+        <div class="sidebar-footer">
+            🥛
+            <p>Healthy Buffalo</p>
+            <p>Healthy Farm</p>
+        </div>
+    </aside>
 
-        <tbody id="tableData">
-            <!-- Data yaha API se aayega -->
-        </tbody>
-    </table>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
 
+        <!-- TOP BANNER -->
+        <header class="top-banner">
+            <div class="banner-brand">
+                <div class="banner-logo">🐃</div>
+                <div>
+                    <h1>SHIVALKAR</h1>
+                    <h2>NATURAL DAIRY FARM</h2>
+                    <p>Pure Milk... Healthy Life...</p>
+                </div>
+            </div>
+
+            <div class="banner-right">
+                <button class="notification-button" id="notificationButton"
+                    aria-label="Notifications" aria-expanded="false">
+                    🔔
+                    <span id="notificationCount">0</span>
+                </button>
+
+                <div class="header-user">
+                    👤 Tejas Mahajan
+                    <span>⌄</span>
+                </div>
+            </div>
+
+            <!-- ANIMATED NOTIFICATION POPUP -->
+            <section class="notification-popup" id="notificationPopup"
+                aria-label="Notifications" hidden>
+
+                <div class="notification-header">
+                    <h3>🔔 Notifications</h3>
+                    <button type="button" id="closeNotifications"
+                        aria-label="Close">×</button>
+                </div>
+
+                <div class="notification-list" id="notificationList">
+                    <div class="notification-empty">
+                        अभी कोई Notification नहीं है।
+                    </div>
+                </div>
+
+                <div class="notification-footer">
+                    <button type="button" id="markAllRead">
+                        Mark All as Read
+                    </button>
+                </div>
+            </section>
+        </header>
+
+        <!-- SUMMARY CARDS -->
+        <section class="summary-grid">
+
+            <div class="summary-card customers-card">
+                <div class="summary-icon">🥛</div>
+                <div>
+                    <p>Total Customers</p>
+                    <h2 id="totalCustomers">0</h2>
+                    <span>Registered Customers</span>
+                </div>
+            </div>
+
+            <div class="summary-card milk-card">
+                <div class="summary-icon">💧</div>
+                <div>
+                    <p>Total Milk Today</p>
+                    <h2 id="totalMilk">0 Ltr</h2>
+                    <span>Today's Milk</span>
+                </div>
+            </div>
+
+            <div class="summary-card collection-card">
+                <div class="summary-icon">₹</div>
+                <div>
+                    <p>Total Collection</p>
+                    <h2 id="totalCollection">₹ 0</h2>
+                    <span>Today's Collection</span>
+                </div>
+            </div>
+
+            <div class="summary-card pending-card">
+                <div class="summary-icon">📋</div>
+                <div>
+                    <p>Pending Bills</p>
+                    <h2 id="pendingBills">0</h2>
+                    <span>Payment Pending</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- RECORD DASHBOARD -->
+        <section class="dashboard-content">
+
+            <div class="records-main">
+
+                <div class="page-heading">
+                    <div class="heading-icon">▤</div>
+                    <div>
+                        <h2>Record Dashboard</h2>
+                        <p>Manage Customer Records &amp; Milk Details</p>
+                    </div>
+                </div>
+
+                <!-- TABS AND SEARCH -->
+                <div class="records-toolbar">
+                    <!-- ADD CUSTOMER BUTTON -->
+<div class="add-customer-toolbar">
+   <button type="button" id="addCustomerButton">
+    + Add Customer
+</button>
 </div>
 
-<!-- EDIT RECORD FORM -->
-<div id="editForm" class="edit-form" style="display:none;">
-    <h2>उधारी रिकॉर्ड सुधारें</h2>
+                    <div class="record-tabs">
+                        <button class="tab-button active"
+                            data-tab="recordList">☷ Record List</button>
 
-    <form id="updateRecordForm">
-        <input type="hidden" id="editId">
+                        <button class="tab-button"
+                            data-tab="milkRecords">💧 Milk Records</button>
 
-        <label>नाम</label>
-        <input type="text" id="editName" required>
+                        <button class="tab-button"
+                            data-tab="bills">▤ Bills</button>
 
-        <label>मोबाइल नंबर</label>
-        <input type="tel" id="editMobile" required>
+                        <button class="tab-button"
+                            data-tab="reports">📊 Reports</button>
+                    </div>
 
-        <label>सुबह का दूध</label>
-        <input type="number" id="editMorning" step="0.01" required>
+                    <div class="record-search">
+                        <span>⌕</span>
+                        <input type="search" id="search"
+                            placeholder="Search Customer...">
+                    </div>
 
-        <label>शाम का दूध</label>
-        <input type="number" id="editEvening" step="0.01" required>
+                </div>
 
-        <label>रेट प्रति लीटर</label>
-        <input type="number" id="editRate" step="0.01" required>
+                <!-- RECORD LIST -->
+                <section class="tab-panel active" id="recordList">
 
-        <button type="submit">Update Record</button>
-        <button type="button" id="cancelEdit">Cancel</button>
-    </form>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Customer Name</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableData">
+                                <tr>
+                                    <td colspan="4">Records Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer">
+                        <span id="recordCount">Showing 0 Records</span>
+                        <div class="pagination" id="pagination"></div>
+                    </div>
+
+                </section>
+
+                <!-- MILK RECORDS -->
+                <section class="tab-panel" id="milkRecords" hidden>
+                    <div class="panel-heading">
+                        <h3>💧 Milk Records</h3>
+                        <p>Customer Milk Entry Management</p>
+                    </div>
+
+                    <div class="milk-category-grid">
+                        <button class="milk-category regular-milk"
+                            data-category="regular">
+                            💧
+                            <strong>Regular Milk</strong>
+                            <span>Daily Milk Entry</span>
+                        </button>
+
+                        <button class="milk-category extra-milk"
+                            data-category="extra">
+                            🥛
+                            <strong>Extra Milk</strong>
+                            <span>Additional Milk Entry</span>
+                        </button>
+
+                        <button class="milk-category not-taken-milk"
+                            data-category="notTaken">
+                            📅
+                            <strong>Milk Not Taken</strong>
+                            <span>Milk Deduction Entry</span>
+                        </button>
+                    </div>
+
+                    <div id="milkEntryArea"></div>
+                </section>
+
+                <!-- BILLS -->
+                <section class="tab-panel" id="bills" hidden>
+                    <div class="panel-heading">
+                        <h3>▤ Customer Bills</h3>
+                        <p>Monthly Customer Billing &amp; Account</p>
+                    </div>
+                    <div id="billContent"></div>
+                </section>
+
+                <!-- REPORTS -->
+                <section class="tab-panel" id="reports" hidden>
+                    <div class="panel-heading">
+                        <h3>📊 Customer Reports</h3>
+                        <p>Milk Records &amp; Collection Reports</p>
+                    </div>
+                    <div id="reportContent"></div>
+                </section>
+
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <aside class="quick-actions">
+                <h3>⭐ Quick Actions</h3>
+
+                <button class="quick-action add-record" id="addRecordButton">
+                    <span>＋</span>
+                    <div>
+                        <strong>Add Record</strong>
+                        <small>New Customer / Milk Entry</small>
+                    </div>
+                </button>
+
+                <button class="quick-action generate-bill"
+                    id="quickGenerateBill">
+                    <span>▤</span>
+                    <div>
+                        <strong>Generate Bill</strong>
+                        <small>Customer Bill</small>
+                    </div>
+                </button>
+
+                <button class="quick-action download-report"
+                    id="downloadReport">
+                    <span>⬇</span>
+                    <div>
+                        <strong>Download Report</strong>
+                        <small>All Records PDF</small>
+                    </div>
+                </button>
+
+                <button class="quick-action whatsapp-action"
+                    id="whatsappBill">
+                    <span>☏</span>
+                    <div>
+                        <strong>Send WhatsApp</strong>
+                        <small>Share Bill</small>
+                    </div>
+                </button>
+            </aside>
+
+        </section>
+
+        <!-- FOOTER FEATURES -->
+        <section class="feature-footer">
+            <div>🛡️ <strong>Secure Data</strong><span>With MongoDB</span></div>
+            <div>📱 <strong>Works on</strong><span>Mobile &amp; Laptop</span></div>
+            <div>🎧 <strong>24/7 Support</strong><span>For You</span></div>
+            <div>❤️ <strong>Thank You!</strong><span>For Supporting Us</span></div>
+        </section>
+
+    </main>
 </div>
 
-<!-- 🔵 HOME LINK -->
-<div style="margin-top:20px; text-align:center;">
-    <a href="/dashboard/dashboard.html" style="color:red; font-weight:bold;">
-        ⬅ Back to Home
-    </a>
+<!-- BOTTOM FOOTER -->
+<footer class="bottom-footer">
+    <div>🌿 SHIVALKAR NATURAL DAIRY FARM</div>
+    <div>At Post Bambhada, Dist. Khargone (M.P.)</div>
+    <div>Healthy Village... Prosperous India...</div>
+</footer>
+
+<!-- ADD / CUSTOMER MODAL -->
+<div class="modal-overlay" id="customerModal" hidden>
+    <div class="modal-content">
+        <div class="modal-heading">
+            <h2 id="customerModalTitle">Add New Customer</h2>
+            <button type="button" id="closeCustomerModal">×</button>
+        </div>
+
+        <form id="customerForm">
+            <input type="hidden" id="customerRecordId">
+
+            <label for="customerName">Customer Name</label>
+            <input type="text" id="customerName" required
+                placeholder="Enter customer name">
+
+            <label for="customerMobile">Mobile Number</label>
+            <input type="tel" id="customerMobile"
+                placeholder="Enter mobile number">
+
+            <label for="customerAddress">Village / Address</label>
+            <input type="text" id="customerAddress"
+                placeholder="Enter village or address">
+
+            <label for="customerRate">Milk Rate (₹ per litre)</label>
+            <input type="number" id="customerRate" min="0"
+                step="0.01" required placeholder="Enter milk rate">
+
+            <div class="modal-actions">
+                <button type="submit" id="saveCustomerButton">
+                    Save Customer
+                </button>
+                <button type="button" id="cancelCustomerButton">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 </body>

@@ -57,70 +57,145 @@
 
     </section>
 
-    <!-- NEW SUPPLIER PERSONAL ID LIST -->
-    <section class="table-section supplier-profile-section">
+<!-- SUPPLIER PERSONAL ID HEADING -->
+<div class="supplier-id-heading-row">
+    <div class="supplier-id-heading">
+        <h2>👥 Supplier Personal ID</h2>
+        <p>सभी Supplier की व्यक्तिगत जानकारी और अकाउंट</p>
+    </div>
 
-        <div class="table-heading">
-            <div>
-                <h2>👥 Supplier Personal ID</h2>
-                <p>सभी Supplier की व्यक्तिगत जानकारी और अकाउंट</p>
-            </div>
+    <button type="button" id="profileSearchToggle"
+        class="profile-search-toggle" title="Search Supplier">
+        🔍
+    </button>
+</div>
 
-            <button type="button" id="addSupplierBtn" class="add-supplier-btn">
-                + Add New Supplier
-            </button>
+<!-- SEARCH BOX -->
+<div class="profile-search" id="profileSearchArea" style="display:none;">
+    <input
+        type="search"
+        id="supplierProfileSearch"
+        placeholder="नाम, मोबाइल या Email से खोजें..."
+    >
+</div>
+
+<!-- ADD NEW SUPPLIER BUTTON -->
+<div class="add-supplier-outside">
+    <button type="button" id="addSupplierBtn" class="add-supplier-btn">
+        + Add New
+    </button>
+</div>
+
+<!-- SUPPLIER LIST -->
+<section class="table-section supplier-profile-section">
+    <div class="supplier-list-heading">
+        <h3>📋 Supplier List</h3>
+        <span id="supplierCount">0 Suppliers</span>
+    </div>
+
+    <div id="supplierProfileList" class="supplier-profile-list">
+        <div class="profile-loading">
+            Supplier List Loading...
         </div>
-
-        <!-- SEARCH -->
-        <div class="profile-search">
-            <input
-                type="search"
-                id="supplierProfileSearch"
-                placeholder="नाम, मोबाइल या Email से खोजें..."
-            >
-        </div>
-
-        <!-- SUPPLIER LIST -->
-        <div id="supplierProfileList" class="supplier-profile-list">
-
-            <div class="profile-loading">
-                Supplier List Loading...
-            </div>
-
-        </div>
-
-    </section>
+    </div>
+</section>
 
 <!-- ADD NEW SUPPLIER FORM -->
-
-<div id="addSupplierForm" class="add-supplier-form" style="display: none;">
+<form id="addSupplierForm" class="add-supplier-form" style="display:none;">
 
     <h3>➕ Create Supplier Personal ID</h3>
 
-    <label>Supplier Name</label>
-    <input type="text" id="newSupplierName" placeholder="Supplier का नाम">
+    <label for="newSupplierName">Supplier Name</label>
+    <input type="text" id="newSupplierName"
+        placeholder="Supplier का नाम">
 
-    <label>Mobile Number</label>
-    <input type="tel" id="newSupplierMobile" placeholder="मोबाइल नंबर">
+    <label for="newSupplierMobile">Mobile Number</label>
+    <input type="tel" id="newSupplierMobile"
+        placeholder="मोबाइल नंबर">
 
-    <label>Email</label>
-    <input type="email" id="newSupplierEmail" placeholder="Email (Optional)">
+    <label for="newSupplierEmail">Email</label>
+    <input type="email" id="newSupplierEmail"
+        placeholder="Email (Optional)">
 
-    <label>Rate Per Liter (₹)</label>
-    <input type="number" id="newSupplierRate" placeholder="दूध का रेट" min="0" step="0.01">
+    <label for="newSupplierRate">Rate Per Liter (₹)</label>
+    <input type="number" id="newSupplierRate"
+        placeholder="दूध का रेट" min="0" step="0.01">
 
-    <label>Opening Balance (₹)</label>
-    <input type="number" id="newSupplierOpening" placeholder="पुराना बकाया (न हो तो 0)" min="0" step="0.01" value="0">
+    <label for="newSupplierOpening">Opening Balance (₹)</label>
+    <input type="number" id="newSupplierOpening"
+        placeholder="पुराना बकाया" min="0" step="0.01" value="0">
 
     <div class="supplier-form-actions">
-        <button type="button" id="saveSupplierProfileBtn">Save Supplier</button>
-        <button type="button" id="cancelSupplierProfileBtn">Cancel</button>
-    </div>
+        <button type="button" id="saveSupplierProfileBtn">
+            Save Supplier
+        </button>
 
-</div>
+        <button type="button" id="cancelSupplierProfileBtn">
+            Cancel
+        </button>
+    </div>
+</form>
+
+    <!-- ADD NEW SUPPLIER FORM -->
+    <form id="addSupplierForm" class="add-supplier-form" style="display: none;">
+
+        <h3>➕ Create Supplier Personal ID</h3>
+
+        <label for="newSupplierName">Supplier Name</label>
+        <input
+            type="text"
+            id="newSupplierName"
+            placeholder="Supplier का नाम"
+        >
+
+        <label for="newSupplierMobile">Mobile Number</label>
+        <input
+            type="tel"
+            id="newSupplierMobile"
+            placeholder="मोबाइल नंबर"
+        >
+
+        <label for="newSupplierEmail">Email</label>
+        <input
+            type="email"
+            id="newSupplierEmail"
+            placeholder="Email (Optional)"
+        >
+
+        <label for="newSupplierRate">Rate Per Liter (₹)</label>
+        <input
+            type="number"
+            id="newSupplierRate"
+            placeholder="दूध का रेट"
+            min="0"
+            step="0.01"
+        >
+
+        <label for="newSupplierOpening">Opening Balance (₹)</label>
+        <input
+            type="number"
+            id="newSupplierOpening"
+            placeholder="पुराना बकाया (न हो तो 0)"
+            min="0"
+            step="0.01"
+            value="0"
+        >
+
+        <div class="supplier-form-actions">
+            <button type="button" id="saveSupplierProfileBtn">
+                Save Supplier
+            </button>
+
+            <button type="button" id="cancelSupplierProfileBtn">
+                Cancel
+            </button>
+        </div>
+
+    </form>
 
     <!-- NOTIFICATION PREVIEW -->
     <section class="notification-section">
+
         <div class="notification-icon">🔔</div>
 
         <div class="notification-content">
@@ -129,9 +204,10 @@
         </div>
 
         <span class="notification-status">Notification Center</span>
+
     </section>
 
-    <!-- OLD SUPPLIER RECORDS - KEEP SAFE -->
+    <!-- OLD SUPPLIER RECORDS -->
     <section class="table-section">
 
         <div class="table-heading">
@@ -181,6 +257,7 @@
 
     </section>
 
+    <!-- FOOTER -->
     <footer class="page-footer">
         <p>© SHIVALKAR NATURAL DAIRY FARM</p>
         <small>Supplier Management System</small>
@@ -188,6 +265,7 @@
 
 </div>
 
+<!-- DATE SCRIPT -->
 <script>
     const today = new Date();
 
@@ -205,6 +283,7 @@
         });
 </script>
 
+<!-- MAIN JAVASCRIPT -->
 <script src="sup.js"></script>
 
 </body>

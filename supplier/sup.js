@@ -1,4 +1,3 @@
-
 const API_URL = "https://shivalkar-dairy-backend.onrender.com/api/supplier";
 
 let supplierData = [];
@@ -857,7 +856,7 @@ const PROFILE_API_URL =
     "https://shivalkar-dairy-backend.onrender.com/api/supplier-profile";
 
 let supplierProfiles = [];
-
+let editingSupplierId = null;
 async function loadSupplierProfiles() {
     const listBox = document.getElementById("supplierProfileList");
 
@@ -892,34 +891,83 @@ async function loadSupplierProfiles() {
     }
 }
 
+function showSupplierProfiles(data)
 
-// SUPPLIER PROFILE DISPLAY
+ {
+    
 
-function showSupplierProfiles(data) {
     const listBox = document.getElementById("supplierProfileList");
-
     if (!listBox) return;
 
-    if (!data.length) {
-        listBox.innerHTML = "अभी कोई Supplier Personal ID नहीं बनी है।";
-        return;
+    const countBox = document.getElementById("supplierCount");
+    if (countBox) {
+        countBox.textContent = `${data.length} Suppliers`;
     }
 
+    if (!data.length) {
+        listBox.innerHTML = `
+            <div class="profile-loading">
+                कोई Supplier नहीं मिला।
+            </div>
+        `;
+        return;
+    }
+    
+
     listBox.innerHTML = data.map((item, index) => `
-        <div class="supplier-profile-card">
-            <div>
-                <h3>${index + 1}. ${escapeHTML(item.name || "")}</h3>
-                <p>📱 ${escapeHTML(item.mobile || "मोबाइल नहीं है")}</p>
-                <p>✉️ ${escapeHTML(item.email || "Email नहीं है")}</p>
-                <p>💰 Rate: ₹${Number(item.rate || 0).toFixed(2)} / लीटर</p>
-                <p>📅 ${item.createdAt
-                    ? new Date(item.createdAt).toLocaleDateString("hi-IN")
-                    : "-"}</p>
+        <div class="supplier-profile-card" data-supplier-id="${escapeHTML(item._id || "")}">
+
+            <button type="button" class="supplier-name-toggle">
+                <span class="supplier-name-left">
+                    <span>👤</span>
+                    <span>${index + 1}. ${escapeHTML(item.name || "")}</span>
+                    <span class="supplier-id-badge">PERSONAL ID</span>
+                </span>
+
+                <span class="supplier-arrow">⌄</span>
+            </button>
+
+            <div class="supplier-quick-details">
+                <span>📱 ${escapeHTML(item.mobile || "-")}</span>
+                <span>📅 ${item.createdAt ? new Date(item.createdAt).toLocaleDateString("hi-IN") : "-"}</span>
+            </div>
+
+            <div class="supplier-profile-options">
+
+                <span class="profile-option">
+                    💰 Rate: ₹${Number(item.rate || 0).toFixed(2)} / L
+                </span>
+
+                <span class="profile-option">📞 Contact</span>
+                
+<button type="button"
+    class="profile-option edit-supplier-btn"
+    data-supplier-id="${escapeHTML(item._id || "")}">
+    ✏️ Edit Supplier
+</button>
+
+                <span class="profile-option">🥛 Daily Milk Entry</span>
+                <span class="profile-option">🗑️ Delete Supplier</span>
+                <span class="profile-option">🧾 Bill Generate</span>
+                <span class="profile-option">📂 Complete Supplier ID</span>
+
             </div>
         </div>
     `).join("");
-}
 
+    listBox.querySelectorAll(".supplier-profile-card").forEach(card => {
+        card.addEventListener("click", function () {
+
+            document.querySelectorAll(".supplier-profile-card").forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove("expanded");
+                }
+            });
+
+            card.classList.toggle("expanded");
+        });
+    });
+}
 
 // PROFILE SEARCH
 
@@ -947,119 +995,25 @@ if (profileSearchBox) {
 const addSupplierBtn = document.getElementById("addSupplierBtn");
 const addSupplierForm = document.getElementById("addSupplierForm");
 
-const saveSupplierProfileBtn =
-    document.getElementById("saveSupplierProfileBtn");
 
-const cancelSupplierProfileBtn =
-    document.getElementById("cancelSupplierProfileBtn");
+// SEARCH ICON SHOW / HIDE
+const profileSearchToggle = document.getElementById("profileSearchToggle");
+const profileSearchArea = document.getElementById("profileSearchArea");
+const supplierProfileSearch = document.getElementById("supplierProfileSearch");
 
-if (addSupplierBtn && addSupplierForm) {
-    addSupplierBtn.addEventListener("click", function () {
-        addSupplierForm.style.display = "block";
-        addSupplierForm.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
-    });
-}
+if (profileSearchToggle && profileSearchArea) {
+    profileSearchToggle.addEventListener("click", function () {
 
-if (cancelSupplierProfileBtn) {
-    cancelSupplierProfileBtn.addEventListener("click", function () {
-        addSupplierForm.style.display = "none";
-    });
-}
+        const isHidden = profileSearchArea.style.display === "none";
 
-if (saveSupplierProfileBtn) {
-    saveSupplierProfileBtn.addEventListener("click", async function () {
+        profileSearchArea.style.display = isHidden ? "block" : "none";
 
-        const name = document.getElementById("newSupplierName").value.trim();
-        const mobile = document.getElementById("newSupplierMobile").value.trim();
-        const email = document.getElementById("newSupplierEmail").value.trim();
-        const rate = document.getElementById("newSupplierRate").value;
-        const openingBalance =
-            document.getElementById("newSupplierOpening").value || 0;
-
-        if (!name || !mobile || rate === "") {
-            await showPopup("नाम, मोबाइल और Rate भरना जरूरी है।", "error");
-            return;
-        }
-
-        if (!/^\d{10}$/.test(mobile)) {
-            await showPopup("10 अंकों का सही मोबाइल नंबर डालें।", "error");
-            return;
-        }
-
-        if (
-            !Number.isFinite(Number(rate)) ||
-            Number(rate) < 0 ||
-            !Number.isFinite(Number(openingBalance)) ||
-            Number(openingBalance) < 0
-        ) {
-            await showPopup("Rate और Opening Balance सही भरें।", "error");
-            return;
-        }
-
-        saveSupplierProfileBtn.disabled = true;
-        saveSupplierProfileBtn.textContent = "Saving...";
-
-        try {
-            const response = await fetch(PROFILE_API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify({
-                    name,
-                    mobile,
-                    email,
-                    rate: Number(rate),
-                    openingBalance: Number(openingBalance)
-                })
-            });
-
-            const responseText = await response.text();
-            let result;
-
-            try {
-                result = JSON.parse(responseText);
-            } catch (parseError) {
-                console.error("Server Response:", responseText);
-
-                throw new Error(
-                    "Server से JSON नहीं मिला। HTTP Status: " +
-                    response.status +
-                    ". Render Backend URL या API Route जाँचनी होगी।"
-                );
-            }
-
-            if (response.status === 401) {
-                throw new Error("कृपया Dashboard में दोबारा Login करें।");
-            }
-
-            if (!response.ok || !result.success) {
-                throw new Error(
-                    result.message || "Supplier सेव नहीं हुआ।"
-                );
-            }
-
-            addSupplierForm.reset();
-            addSupplierForm.style.display = "none";
-
-            await loadSupplierProfiles();
-
-            await showPopup("Supplier Personal ID सफलतापूर्वक बन गई!");
-
-        } catch (error) {
-            console.error("Save Supplier Error:", error);
-            await showPopup(error.message, "error");
-
-        } finally {
-            saveSupplierProfileBtn.disabled = false;
-            saveSupplierProfileBtn.textContent = "Save Supplier";
+        if (isHidden && supplierProfileSearch) {
+            supplierProfileSearch.focus();
         }
     });
 }
+
 
 loadSupplierProfiles();
 loadData();
