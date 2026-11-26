@@ -119,22 +119,51 @@ function showCustomers(data) {
 
         const actionCell = document.createElement("td");
 
-        // VIEW
-        const viewButton = document.createElement("button");
-        viewButton.textContent = "View";
-        viewButton.className = "view-btn";
+      
+// VIEW CUSTOMER PROFILE
+const viewButton = document.createElement("button");
+viewButton.textContent = "View";
+viewButton.className = "view-btn";
 
-        viewButton.addEventListener("click", () => {
-            alert(
-                "Customer Details\n\n" +
-                "Customer ID: " + (customer.customerId || "-") + "\n" +
-                "Name: " + (customer.name || "-") + "\n" +
-                "Mobile: " + (customer.mobile || "-") + "\n" +
-                "Address: " + (customer.address || "-") + "\n" +
-                "Milk Rate: ₹" + (customer.rate ?? 0) + "\n" +
-                "Status: " + (customer.status || "Active")
-            );
-        });
+viewButton.addEventListener("click", () => {
+    const profileModal = document.getElementById("customerProfileModal");
+
+    document.getElementById("profileName").textContent =
+        customer.name || "Customer Name";
+
+    document.getElementById("profileCustomerId").textContent =
+        "Customer ID: " + (customer.customerId || "-");
+
+    document.getElementById("profileMobile").textContent =
+        customer.mobile || "-";
+
+    document.getElementById("profileAddress").textContent =
+        customer.address || "-";
+
+    document.getElementById("profileRate").textContent =
+        "₹" + (customer.rate ?? 0) + " / Litre";
+
+    document.getElementById("profileStatus").textContent =
+        customer.status || "ACTIVE";
+
+    document.getElementById("profileEditButton").onclick = () => {
+        profileModal.hidden = true;
+        openCustomerModal(customer);
+    };
+
+    document.getElementById("profileDeleteButton").onclick = () => {
+        profileModal.hidden = true;
+        deleteCustomer(customer._id);
+    };
+
+    profileModal.hidden = false;
+});
+
+// CLOSE CUSTOMER PROFILE
+document.getElementById("closeProfileModal")
+    .addEventListener("click", () => {
+        document.getElementById("customerProfileModal").hidden = true;
+    });
 
         // EDIT
         const editButton = document.createElement("button");
@@ -322,5 +351,157 @@ document.getElementById("markAllRead")
             `<div class="notification-empty">अभी कोई Notification नहीं है।</div>`;
     });
 
+    // REGULAR MILK ENTRY FORM
+document.querySelector('[data-category="regular"]')
+    .addEventListener("click", () => {
+
+        const milkEntryArea = document.getElementById("milkEntryArea");
+
+        if (customerData.length === 0) {
+            milkEntryArea.innerHTML =
+                "<p>पहले Add Customer से Customer सेव करें।</p>";
+            return;
+        }
+
+        milkEntryArea.innerHTML = `
+            <div class="milk-entry-form">
+                <h3>🥛 Regular Milk Entry</h3>
+
+                <label>Customer Name</label>
+                <select id="milkCustomer" required>
+                    <option value="">Select Customer</option>
+                    ${customerData.map(c => `
+                        <option value="${c._id}">
+                            ${c.name} (${c.customerId || "-"})
+                        </option>
+                    `).join("")}
+                </select>
+
+                <p>Customer ID: <strong id="milkCustomerId">-</strong></p>
+
+                <label>Date</label>
+                <input type="date" id="milkDate" required>
+
+                <label>Morning Milk (Litre)</label>
+                <input type="number" id="morningMilk" min="0" step="0.01">
+
+                <label>Evening Milk (Litre)</label>
+                <input type="number" id="eveningMilk" min="0" step="0.01">
+
+                <p>Total Milk: <strong id="totalMilkEntry">0 L</strong></p>
+
+                <p>Milk Rate: <strong id="milkRateEntry">₹0</strong></p>
+
+                <p>Total Amount: <strong id="milkAmountEntry">₹0</strong></p>
+
+                <button type="button" id="saveRegularMilk">
+                    Save Regular Entry
+                </button>
+            </div>
+        `;
+
+        document.getElementById("milkDate").value =
+            new Date().toISOString().split("T")[0];
+
+        const customerSelect = document.getElementById("milkCustomer");
+
+        function calculateMilk() {
+            const morning = Number(document.getElementById("morningMilk").value) || 0;
+            const evening = Number(document.getElementById("eveningMilk").value) || 0;
+            const total = morning + evening;
+
+            const selectedCustomer = customerData.find(
+                c => c._id === customerSelect.value
+            );
+
+            const rate = Number(selectedCustomer?.rate) || 0;
+
+            document.getElementById("milkCustomerId").textContent =
+                selectedCustomer?.customerId || "-";
+
+            document.getElementById("milkRateEntry").textContent =
+                "₹" + rate.toFixed(2);
+
+            document.getElementById("totalMilkEntry").textContent =
+                total.toFixed(2) + " L";
+
+            document.getElementById("milkAmountEntry").textContent =
+                "₹" + (total * rate).toFixed(2);
+        }
+
+        customerSelect.addEventListener("change", calculateMilk);
+        document.getElementById("morningMilk").addEventListener("input", calculateMilk);
+        document.getElementById("eveningMilk").addEventListener("input", calculateMilk);
+
+        // SAVE REGULAR MILK ENTRY
+document.getElementById("saveRegularMilk").addEventListener("click", async () => {
+
+    const customer = customerData.find(
+        c => c._id === customerSelect.value
+    );
+
+    const date = document.getElementById("milkDate").value;
+    const morning = Number(document.getElementById("morningMilk").value) || 0;
+    const evening = Number(document.getElementById("eveningMilk").value) || 0;
+
+    if (!customer) {
+        alert("पहले Customer चुनें।");
+        return;
+    }
+
+    if (!date || (morning <= 0 && evening <= 0)) {
+        alert("Date और दूध की मात्रा भरें।");
+        return;
+    }
+
+    const totalMilk = morning + evening;
+    const rate = Number(customer.rate) || 0;
+
+    const record = {
+        entryType: "regular",
+        customerId: customer.customerId,
+        customerMongoId: customer._id,
+        customerName: customer.name,
+        date: date,
+        morningMilk: morning,
+        eveningMilk: evening,
+        totalMilk: totalMilk,
+        rate: rate,
+        totalAmount: totalMilk * rate
+    };
+
+    const saveButton = document.getElementById("saveRegularMilk");
+    saveButton.disabled = true;
+
+    try {
+        const response = await fetch(
+            "https://shivalkar-dairy-backend.onrender.com/api/record",
+            {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(record)
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || result.success === false) {
+            throw new Error(result.message || "Record Save Failed");
+        }
+
+        alert("Regular Milk Entry सफलतापूर्वक Save हुई!");
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message || "Entry Save नहीं हुई।");
+    } finally {
+        saveButton.disabled = false;
+    }
+});
+    });
+    
 // INITIAL LOAD
 loadCustomers();

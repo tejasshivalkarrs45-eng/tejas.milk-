@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shivalkar Dairy | Record Dashboard</title>
     <link rel="stylesheet" href="record.css">
+    <link rel="stylesheet" href="../server/output.css">
     <script src="record.js" defer></script>
+    
 </head>
 <body>
 
@@ -93,7 +95,7 @@
         <!-- SUMMARY CARDS -->
         <section class="summary-grid">
 
-            <div class="summary-card customers-card">
+            <div class="summary-card customers-card relative overflow-hidden ring-1 ring-white/30">
                 <div class="summary-icon">🥛</div>
                 <div>
                     <p>Total Customers</p>
@@ -139,7 +141,7 @@
                 <div class="page-heading">
                     <div class="heading-icon">▤</div>
                     <div>
-                        <h2>Record Dashboard</h2>
+                        <h2 class="text-2xl font-bold text-blue-700">Record Dashboard</h2>
                         <p>Manage Customer Records &amp; Milk Details</p>
                     </div>
                 </div>
@@ -352,6 +354,61 @@
                 </button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- 3D CUSTOMER PROFILE POPUP -->
+<div class="customer-profile-overlay" id="customerProfileModal" hidden>
+    <div class="customer-profile-card" id="customerProfileCard">
+
+        <div class="profile-card-top">
+            <div class="profile-brand">
+                <span>🐃</span>
+                <div>
+                    <h2>SHIVALKAR</h2>
+                    <p>NATURAL DAIRY FARM</p>
+                </div>
+            </div>
+
+            <span class="profile-status" id="profileStatus">ACTIVE</span>
+            <button type="button" class="profile-close" id="closeProfileModal">×</button>
+        </div>
+
+        <div class="profile-hero">
+            <div class="profile-avatar">👤</div>
+            <div>
+                <p>CUSTOMER PROFILE</p>
+                <h2 id="profileName">Customer Name</h2>
+                <span id="profileCustomerId">Customer ID: -</span>
+            </div>
+        </div>
+
+        <div class="profile-details">
+            <div class="profile-detail-item">
+                <span>📱 Mobile Number</span>
+                <strong id="profileMobile">-</strong>
+            </div>
+
+            <div class="profile-detail-item">
+                <span>📍 Address</span>
+                <strong id="profileAddress">-</strong>
+            </div>
+
+            <div class="profile-detail-item">
+                <span>🥛 Milk Rate</span>
+                <strong id="profileRate">₹0 / Litre</strong>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <button type="button" id="profileEditButton">✏️ Edit Customer</button>
+            <button type="button" id="profileDeleteButton">🗑 Delete Customer</button>
+        </div>
+
+        <div class="profile-card-footer">
+            SHIVALKAR NATURAL DAIRY FARM
+        </div>
+
     </div>
 </div>
 

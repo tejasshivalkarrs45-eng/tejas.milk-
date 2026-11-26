@@ -1784,3 +1784,81 @@ h1, h2, h3 {
     color: #D7E8C9;
     padding: 0 7px;
 }
+
+/* CUSTOMER PROFILE - BIG TEXT & PREMIUM CONTROLS */
+
+.customer-profile-card {
+    font-size: 15px;
+}
+
+.profile-brand h2 {
+    font-size: 21px;
+}
+
+.profile-brand p {
+    font-size: 11px;
+}
+
+.profile-status {
+    font-size: 12px;
+    padding: 8px 13px;
+}
+
+.profile-hero h2 {
+    font-size: 25px;
+}
+
+.profile-hero span {
+    font-size: 13px;
+}
+
+.profile-detail-item {
+    padding: 17px;
+}
+
+.profile-detail-item span {
+    font-size: 14px;
+}
+
+.profile-detail-item strong {
+    font-size: 15px;
+}
+
+.profile-actions button {
+    min-height: 53px;
+    font-size: 14px;
+    letter-spacing: .3px;
+    box-shadow: 0 8px 18px rgba(0,0,0,.22);
+}
+
+.profile-actions button:hover {
+    transform: translateY(-5px) scale(1.04);
+    box-shadow: 0 13px 25px rgba(0,145,255,.3);
+}
+
+.profile-close {
+    font-size: 27px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
+
+.profile-close:hover {
+    box-shadow: 0 0 18px rgba(255,70,70,.6);
+}
+
+@media (max-width: 480px) {
+    .profile-hero h2 {
+        font-size: 21px;
+    }
+
+    .profile-detail-item span {
+        font-size: 13px;
+    }
+
+    .profile-detail-item strong {
+        font-size: 14px;
+    }
+
+    .profile-actions button {
+        font-size: 14px;
+    }
+}
